@@ -1,0 +1,307 @@
+21.11.29.1회차
+===============================================================================
+*단계별로 풀어보기 ~15552
+===============================================================================
+
+
+
+
+
+
+################################################################################################################
+예제1)2588 곱셈
+
+*정수의 자리수를 나타내는 api를 이용해야함
+
+https://www.acmicpc.net/problem/2588
+################################################################################################################
+
+
+
+답:
+
+
+
+
+package backjun;
+
+import java.util.Scanner;
+
+public class Main {
+	private static final Scanner scan = new Scanner(System.in);
+	
+	public static void main(String[] args) {
+		int A = scan.nextInt();
+		int B = scan.nextInt();
+		int C = B;
+		
+		int length = (int) (Math.log10(B) + 1);
+		
+		for (int i = 0; i < length; i++) {
+			int tmp = C % 10;
+			System.out.println(A * tmp);
+			C /= 10;
+		}
+		
+		System.out.println(A * B);
+	}
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+################################################################################################################
+예제2)2753 윤년
+
+*하드코딩하지않고 상수를 이용
+*변수명을 명확하게
+*else 사용 x
+*개행규칙 적용
+
+https://www.acmicpc.net/problem/2753
+################################################################################################################
+
+
+
+
+답:
+
+
+
+package backjun;
+
+import java.util.Scanner;
+
+public class Main {
+	private static final Scanner scan = new Scanner(System.in);
+	public static final int LEAP_YEAR = 1;  
+	public static final int COMMON_YEAR = 0;  
+	
+	public static void main(String[] args) {
+		int year = scan.nextInt();
+		final int remainderOfYearDividedByFour = year % 4;
+		final int remainderOfYearDividedByHundred = year % 100;
+		final int remainderOfYearDividedByFourHundred = year % 400;
+		
+		if (remainderOfYearDividedByFour != 0) {
+			System.out.println(COMMON_YEAR);
+			return;
+		}
+		
+		if (remainderOfYearDividedByFour == 0 
+				&& remainderOfYearDividedByHundred != 0) {
+			System.out.println(LEAP_YEAR);
+			return;
+		}
+		
+		if (remainderOfYearDividedByFourHundred == 0) {
+			System.out.println(LEAP_YEAR);
+			return;
+		}
+		
+		System.out.println(COMMON_YEAR);
+
+	}//method
+}//class
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+################################################################################################################
+예제3)14681 사분면 고르기
+
+*함수를 이용해서 main 을 복잡하지 않게
+*명확한 변수 식별자 사용
+
+https://www.acmicpc.net/problem/14681
+################################################################################################################
+
+
+
+
+답:
+
+
+
+
+
+
+
+
+package backjun;
+
+import java.util.Scanner;
+
+public class Main {
+	private static final Scanner scan = new Scanner(System.in);  
+	
+	public static int quadrantCheck(int x, int y) {
+		if (x > 0 && y > 0) {
+			return 1;
+		}
+		
+		if (y > 0 && x < 0) {
+			return 2;
+		}
+		
+		if (y < 0 && x < 0) {
+			return 3;
+		}
+		
+		if (y < 0 && x > 0) {
+			return 4;
+		}
+		
+		return 0;
+	}
+	
+	public static void main(String[] args) {
+		int x = scan.nextInt();
+		int y = scan.nextInt();
+		int quadrant = quadrantCheck(x, y);
+		
+		System.out.println(quadrant);
+	}//method
+}//class
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+################################################################################################################
+예제4)2884 알람 시계(45분일찍)
+
+*함수를 이용해서 main 을 복잡하지 않게
+*명확한 변수 식별자 사용
+*함수길이 15라인이하
+
+https://www.acmicpc.net/problem/2884
+################################################################################################################
+
+
+
+
+답:
+
+
+
+
+
+package backjun;
+
+import java.util.Scanner;
+
+public class Main {
+	private static final Scanner scan = new Scanner(System.in);  
+	
+	public static int[] correctTime(int H, int M) {
+		int[] candidateTime = new int[2];
+		boolean flag  = isMinuteImmediatelyApplicable(M); // 시간 차감없이 분만 수정해도 되는지 확인하는 메서드
+		
+		correctTime(flag, H, M, candidateTime);
+		return candidateTime;
+	}
+	
+	private static void correctTime(boolean flag, int H, int M, int[] candidateTime) {
+		if (flag) {
+			candidateTime[0] = H;
+			candidateTime[1] = M - 45;
+			return;
+		}
+		
+		if (!flag) {
+			correctTime(H, M, candidateTime);
+			return;
+		}
+	}
+	
+	private static void correctTime(int H, int M, int[] candidateTime) {
+		if (H == 0) {
+			H = 24;
+			candidateTime[0] = H - 1;
+			candidateTime[1] = M - 45 + 60;
+		}
+		
+		candidateTime[0] = H - 1;
+		candidateTime[1] = M - 45 + 60;
+	}
+	
+	private static boolean isMinuteImmediatelyApplicable(int M) {
+		int candidateMinute = M - 45;
+		
+		if (candidateMinute >= 0) {
+			return true;
+		}
+		
+		if (candidateMinute < 0) {
+			return false;
+		}
+		
+		return true;
+	}
+	
+	public static void main(String[] args) {
+		int H = scan.nextInt();
+		int M = scan.nextInt();
+		
+		int[] candidateTime = correctTime(H, M);
+		
+		H = candidateTime[0];
+		M = candidateTime[1];
+		
+		System.out.println(H + " " + M);
+	}//method
+}//class
+

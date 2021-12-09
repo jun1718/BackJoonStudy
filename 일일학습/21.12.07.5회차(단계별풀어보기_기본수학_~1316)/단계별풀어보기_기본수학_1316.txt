@@ -1,0 +1,396 @@
+21.12.07.5회차
+===============================================================================
+*단계별로 풀어보기 
+===============================================================================
+
+
+
+
+
+
+
+
+################################################################################################################
+예제15)단계별로 풀어보기 / 문자열 / 단어공부
+
+*지문에는 문자 사이에 공백이 있다면 단 하나라고 되어있지만 여러개가 올수 있다고 가정하고서 문제를 풀어라
+*주의)split은 문자열의 특정 단어를 기준으로 문자열을 나누는 것인데 이때 나눠져야하는 단어가 공백만 있을경우 단어로 취급하지
+ 않으며 배열자체는 하나의 크기로 비어있는 채로 생성된다.
+*나눠야하는 문자열에 공백이 아닌 단어가 하나라도 있다면 해당 단어 앞의 공백들은 
+	""으로(빈문자열) 생성되어 나누어진다.
+		String str2 = "                     ";
+		String[] tmp = str2.split(" ");
+		
+		System.out.println(tmp.length);
+		System.out.println(Arrays.toString(tmp));
+
+https://www.acmicpc.net/problem/1152
+################################################################################################################
+
+
+
+
+답:
+
+*문자열은 대소문자와 공백으로 이루어졌다. 이말은 대소문자만 하나 있거나 공백만 하나 있을수도 있다는 소리이다.
+*그리고 문자가 시작되기전의 공백은 제거해주어야 
+package backjun;
+
+import java.util.*;
+
+public class Main {
+	private static final Scanner scan = new Scanner(System.in);  
+	
+	public static void main(String[] args) {
+		String str = scan.nextLine().trim().replaceAll(" +", " ");
+		if (str.length() == 0) {
+			System.out.println(0);			
+		} else {
+			String[] tmp = str.split(" ");
+			System.out.println(tmp.length);			
+		}
+	}
+}//class
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+################################################################################################################
+예제16)단계별로 풀어보기 / 문자열 / 상수(사람이름)
+
+*StringBuilder 또는 List 또는 배열을 이용해서 풀수있는데 StringBuilder를 이용해서푼다.
+	-StringBuilder 초기화시에 입력받은 문자열을 이용해서 초기화법을 익힌다.
+	-다시 숫자로 변환할때 String만 변환가능함을 인지하고 String형으로 바꾸는 법을 익힌다.
+
+https://www.acmicpc.net/problem/1152
+################################################################################################################
+
+
+
+
+답:
+
+
+
+
+package backjun;
+
+import java.util.*;
+
+public class Main {
+	private static final Scanner scan = new Scanner(System.in);  
+	
+	public static void main(String[] args) {
+		String A = scan.next();
+		String B = scan.next();
+		
+		StringBuilder sbA = new StringBuilder(A);
+		StringBuilder sbB = new StringBuilder(B);
+		sbA.reverse();
+		sbB.reverse();
+		
+		int intA = Integer.parseInt(sbA.toString());
+		int intB = Integer.parseInt(sbB.toString());
+		
+		int result = Math.max(intA, intB);
+		
+		System.out.println(result);
+	}
+}//class
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+################################################################################################################
+예제17)단계별로 풀어보기 / 문자열 / 다이얼
+
+*인덱스를 배열에 접근하기 위한 데이터 의미 외에도 유의미한 데이터로 이용해서 푸는 연습
+
+https://www.acmicpc.net/problem/1152
+################################################################################################################
+
+
+
+
+답:
+
+
+
+
+package backjun;
+
+import java.util.*;
+
+public class Main {
+	private static final Scanner scan = new Scanner(System.in);  
+	
+	public static void main(String[] args) {
+		String[] location = {"", " ", "ABC", "DEF", "GHI", "JKL", "MNO", "PQRS", "TUV", "WXYZ"};
+		String telStr = scan.next();
+		
+		int sum = 0;
+		
+		for (int i = 0; i < telStr.length(); i++) {
+			for (int j = 1; j < location.length; j++) {
+				if (location[j].contains(String.valueOf(telStr.charAt(i)))) {
+					sum += j + 1;
+					break;
+				}
+ 			}
+		}
+		
+		System.out.println(sum);
+	}
+}//class
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+################################################################################################################
+예제18)단계별로 풀어보기 / 문자열 / 크로티아 알파벳
+
+*다풀고나서 아래 답 밑의 개념 확인할것
+
+https://www.acmicpc.net/problem/2941
+################################################################################################################
+
+
+
+
+답:
+
+*replaceAll을 이용한 정규식 및 연산자
+-str.replaceAll("[abc]", "왕"); // a b c 각각의 문자가 있다면 모두 왕으로 변경
+	str.replaceAll("a", "왕"); //현재 줄포함 아래처럼 할 필요없음
+	str.replaceAll("b", "왕");
+	str.replaceAll("c", "왕");
+-str.replaceAll("[0-9]", ""); // 문자열 내의 숫자[0-9] 모두 빈문자열로 변경
+-str.replaceAll("[^0-9]", ""); // 문자열 내의 숫자[0-9] 외의 것을 모두 빈문자열로 변경
+					//숫자만 문자열에 남겨두는 법
+-str.replaceAll(" +", ""); // 공백뭉쳐있는걸 하나의 공백으로 변경
+
+package backjun;
+
+import java.util.*;
+
+public class Main {
+	private static final Scanner scan = new Scanner(System.in);  
+	
+	public static void main(String[] args) {
+		String[] specialWords = {"c=", "c-", "dz=", "d-", "lj", "nj", "s=", "z="};
+		String words = scan.next();
+		
+		
+		for (int i = 0; i < specialWords.length; i++) {
+			words = words.replace(specialWords[i], "A");
+		}
+
+		int count = words.length();
+
+		System.out.println(count);
+		
+	}
+}//class
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+################################################################################################################
+예제19)단계별로 풀어보기 / 문자열 / 그룹 단어 제거
+
+
+https://www.acmicpc.net/problem/1316
+################################################################################################################
+
+
+
+
+답:
+
+
+
+
+
+
+package backjun;
+
+import java.util.*;
+
+public class Main {
+	private static final Scanner scan = new Scanner(System.in);  
+	
+	public static void main(String[] args) {
+		int number = scan.nextInt();
+		
+		int count = 0;
+		
+		for (int index = 0; index < number; index++) {
+			String words = scan.next();
+			int i = 0;
+			boolean flag = false;
+			
+			while (i < words.length()) {
+				int tmp = i;
+				
+				while (i < words.length() - 1 && words.charAt(i) == words.charAt(i+1)) {
+					i++;
+				}
+				
+				int tmp2 = i;
+				
+				while (tmp2 < words.length() - 1 && words.charAt(tmp) != words.charAt(tmp2 + 1)) {				
+					tmp2++;
+				}
+				
+				if (tmp2 != words.length() - 1) {
+					flag = true;
+					break;
+				}
+				
+				i++;
+			}
+			
+			if (!flag) {
+				count++;
+			}			
+		}
+		
+		System.out.println(count);
+	}
+}//class
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+################################################################################################################
+예제20)단계별로 풀어보기 / 기본수학 / 손익분기점
+
+*while로하면 시간에러난다. 식 정리에 유의하라
+
+https://www.acmicpc.net/problem/1316
+################################################################################################################
+
+
+
+
+답 :
+
+
+
+package backjun;
+
+import java.util.*;
+
+public class Main {
+	private static final Scanner scan = new Scanner(System.in);  
+	
+	public static void main(String[] args) {
+		int A = scan.nextInt();
+		int B = scan.nextInt();
+		int C = scan.nextInt();
+		
+		long count = gameStart(A, B, C);
+		System.out.println(count);
+	}
+	
+	public static long gameStart(long a, long b, long c) {		
+		if (c - b <= 0) {
+			return -1;
+		}
+		
+		long result = a / (c - b) + 1;
+		
+		return result;
+	}
+}//class
+
+
+

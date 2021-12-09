@@ -1,0 +1,378 @@
+21.12.01.2회차
+===============================================================================
+*단계별로 풀어보기 1차원배열 ~1546
+===============================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+################################################################################################################
+예제5)while 더하기 사이클
+
+https://www.acmicpc.net/problem/1110
+################################################################################################################
+
+
+
+
+답:
+
+
+
+
+package backjun;
+
+import java.util.*;
+
+public class Main {
+	private static final Scanner scan = new Scanner(System.in);  
+	
+	public static void main(String[] args) {
+		
+		int num = scan.nextInt();
+		int count = 0;
+
+		String result = String.valueOf(num);
+		
+		while (true) {
+			int tmp = Integer.parseInt(result);
+			if (count != 0 && tmp == num) {
+				break;
+			}
+			
+			int ten = tmp / 10;
+			int one = tmp % 10;
+			
+			int add = ten + one;
+			int addOne = add % 10;
+			
+			result = "" + one + addOne;
+			count++;
+		}
+		
+		System.out.println(count);
+
+	}//method
+}//class
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+################################################################################################################
+예제6)1차원 배열 최댓값 
+
+*배열에서 특정 값의 인덱스찾기
+
+https://www.acmicpc.net/problem/2562
+################################################################################################################
+
+
+
+
+답:
+*배열에서 특정 값의 인덱스찾기 : 배열에서 불가능함. list에서 가능함으로 asList로 잠시변환시켜서 거기서 
+	indexOf()해서 찾아온다. 다만 list로 변경시킬 배열은 원시자료형이 아니라 객체형이어야한다.
+		List<Integer>하듯이(List<int>하지 않잖아?)
+
+
+
+package backjun;
+
+import java.util.*;
+
+public class Main {
+	private static final Scanner scan = new Scanner(System.in);  
+	
+	public static void main(String[] args) {
+		Integer[] arr = new Integer[9];
+		
+		for (int i = 0; i < 9; i++) {
+			arr[i] = scan.nextInt();
+		}
+		
+		Integer[] tmp = Arrays.copyOf(arr, 9);
+		Arrays.sort(tmp);
+		int max = tmp[8];
+		
+		int index = Arrays.asList(arr).indexOf(max);
+
+		System.out.println(max);
+		System.out.println(index+1);
+	}//method
+}//class
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+################################################################################################################
+예제7)숫자의 개수 / 1차원배열
+
+https://www.acmicpc.net/problem/2577
+################################################################################################################
+
+
+
+
+답:
+
+
+
+
+
+
+
+
+package backjun;
+
+import java.util.*;
+
+public class Main {
+	private static final Scanner scan = new Scanner(System.in);  
+	
+	public static void main(String[] args) {
+		int A = scan.nextInt();
+		int B = scan.nextInt();
+		int C = scan.nextInt();
+		
+		String mul = String.valueOf(A * B * C);
+		int[] arr = new int[10];
+		
+		for (int i = 0; i < 10; i++) {
+			for (int j = 0; j < mul.length(); j++) {
+				if (i == mul.charAt(j) - 48) {
+					arr[i]++;
+				}
+			}
+		}
+
+		for (int i = 0; i < 10; i++) {
+			System.out.println(arr[i]);
+		}
+	}//method
+}//class
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+################################################################################################################
+예제8)단계별로 풀어보기 / 1차원배열 / 나머지
+
+*hash만을 이용해서 해도 되지만 1차원배열의 문제이니만큼 배열을 중심으로 다른 컬렉션을 이용하여
+	풀도록하여라. 
+ 
+
+https://www.acmicpc.net/problem/3052
+################################################################################################################
+
+
+
+
+답:
+
+
+*hash만을 이용해서 해도 되지만 1차원배열의 문제이니만큼 배열을 중심으로 다른 컬렉션을 이용하여
+	풀도록하여라. : 배열에서 같은 값을 가지는 수의 전체 갯수와 같은 값을 가지는 수가 각각 몇개식 있는지를
+		찾아내는 논리가 필요함
+
+
+
+
+
+
+
+package backjun;
+
+import java.util.*;
+
+public class Main {
+	private static final Scanner scan = new Scanner(System.in);  
+	
+	public static void main(String[] args) {
+		int[] arr = new int[10];
+		
+		for (int i = 0; i < 10; i++) {
+			arr[i] = scan.nextInt() % 42;
+		}
+	
+		Arrays.sort(arr);
+		
+		List<Integer> list = new ArrayList<Integer>();
+		
+		for (int i = 0; i < 10; i++) {
+			int count = 1;
+			while (i + 1 < 10 && arr[i] != arr[i + 1]) {
+				i++;
+			}
+			
+			while (i + 1 < 10 && arr[i] == arr[i+1]) {
+				count++;
+				i++;
+			}
+			
+			if (count != 1) {
+				list.add(count);
+			}
+		}
+		
+		int sum = 0;
+		for (int i = 0; i < list.size(); i++) {
+			sum += list.get(i);
+		}
+		
+		int result = 10 - sum + list.size();
+		
+		System.out.println(result);
+		
+	}//method
+}//class
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+################################################################################################################
+예제9)단계별로 풀어보기 / 1차원배열 / 평균
+
+https://www.acmicpc.net/problem/1546
+################################################################################################################
+
+
+
+
+답:
+
+
+
+
+
+
+
+
+package backjun;
+
+import java.util.*;
+
+public class Main {
+	private static final Scanner scan = new Scanner(System.in);  
+	
+	public static void main(String[] args) {
+		int count = scan.nextInt();
+		int[] arr = new int[count];
+		
+		for (int i = 0; i < count; i++) {
+			arr[i] = scan.nextInt();
+		}
+		
+		Arrays.sort(arr);
+		int max = arr[count-1];
+		
+		double sum = 0;
+		
+		for (int i = 0; i < count; i++) {
+			double scoreChange = (arr[i] / (double) max) * 100;
+			sum += scoreChange;
+		}
+		
+		double scoreResult = sum / count;
+		
+		System.out.println(scoreResult);
+	}//method
+}//class
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

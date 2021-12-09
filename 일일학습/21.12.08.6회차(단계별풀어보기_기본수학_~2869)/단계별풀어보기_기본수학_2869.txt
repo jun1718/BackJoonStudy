@@ -1,0 +1,277 @@
+21.12.08.6회차
+===============================================================================
+*단계별로 풀어보기 
+===============================================================================
+
+
+
+################################################################################################################
+예제21)단계별로 풀어보기 / 기본수학 / 벌집
+
+*답이 2개인데 하나는 확실하게 그림상에서 이전 단계와 다음단계의 범위를 나눠 준것이고 B는 다음 단계만을 확인한것
+	-최초 푼 답 : A, 개선한 답 : B
+
+https://www.acmicpc.net/problem/2292
+################################################################################################################
+
+
+
+
+답 A:
+
+
+package backjun;
+
+import java.util.*;
+
+public class Main {
+	private static final Scanner scan = new Scanner(System.in);  
+	
+	public static void main(String[] args) {
+		int num = scan.nextInt();
+		
+		int before = 0;
+		int start = 1;
+		int count = 1;
+		
+		while (num <= before || num > start) {
+			before = start;
+			start = (6 * count) + before;
+			count++;
+		}
+		
+		System.out.println(count);
+	}
+}//class
+
+
+
+
+
+
+
+답 B:
+
+
+package backjun;
+
+import java.util.*;
+
+public class Main {
+	private static final Scanner scan = new Scanner(System.in);  
+	
+	public static void main(String[] args) {
+		int num = scan.nextInt();
+		
+		int start = 1;
+		int count = 1;
+		
+		while (num > start) {
+			start += (6 * count);
+			count++;
+		}
+		
+		System.out.println(count);
+	}
+}//class
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+################################################################################################################
+예제22)단계별로 풀어보기 / 기본수학 / 분수찾기
+
+*답B로 풀어라
+
+https://www.acmicpc.net/problem/1193
+################################################################################################################
+
+
+
+
+답 A(내가 푼 답 _ 기계적임. 마지막에 수학적 계산이 안들어갔기때문에 답 B가 더 문제에 맞다):
+
+package backjun;
+
+import java.util.*;
+
+public class Main {
+	private static final Scanner scan = new Scanner(System.in);  
+	
+	public static void main(String[] args) {
+		int num = scan.nextInt();
+		
+		
+		int line = 1;
+		int count = 1;
+		
+		while (count < num) {
+			line++;
+			count += line;
+		}
+		
+		String str = "";
+		
+		int hang = 0;
+		int yul = 0;
+		int location = num - (count - line);
+		int i = 1;
+		
+		
+		if (line % 2 == 0) { // 짝수면 위에서 아래
+			hang = 1;
+			yul = line;
+			
+			while (i < location) {
+				hang++;
+				yul--;
+				i++;
+			}
+		} else { // 홀수라인이면 아래에서 위
+			hang = line;
+			yul = 1;
+			
+			while (i < location) {
+				hang--;
+				yul++;
+				i++;
+			}
+		}
+		
+		str = hang + "/" + yul;
+		System.out.println(str);
+	}
+}//class
+
+
+
+
+
+
+
+답 B(다른사람 답을 참고하여 재작성한 답):
+
+package backjun;
+
+import java.util.*;
+
+public class Main {
+	private static final Scanner scan = new Scanner(System.in);  
+	
+	public static void main(String[] args) {
+		int num = scan.nextInt();
+		
+		int nowCross = 1;
+		int totalCountOfPrevCrossLines = 0;
+		
+		while (true) {
+			if (nowCross + totalCountOfPrevCrossLines >= num) {
+				if (nowCross % 2 != 0) {
+					System.out.println(nowCross - (num - totalCountOfPrevCrossLines - 1) 
+							+ "/" + (num - totalCountOfPrevCrossLines));
+					break;
+				} else {
+					System.out.println((num - totalCountOfPrevCrossLines) 
+							+ "/" + (nowCross - (num - totalCountOfPrevCrossLines - 1)));
+					break;
+				}
+			} else {
+				totalCountOfPrevCrossLines += nowCross;
+				nowCross++;
+			}
+		}
+	}
+}//class
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+################################################################################################################
+예제23)단계별로 풀어보기 / 기본수학 / 달팽이는 올라가고 싶다 
+
+** 입출력 버퍼사용 연습문제
+
+https://www.acmicpc.net/problem/2869
+################################################################################################################
+
+
+
+답 :
+
+
+
+
+package backjun;
+
+import java.util.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
+import java.io.IOException;
+import java.util.StringTokenizer;
+
+public class Main {
+//	private static final Scanner scan = new Scanner(System.in);  
+	// 이거 scan 주석처리 안하면 시간초과됨
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine(), " ");
+												//, " " 해도되고 안해도 됨 근데 한게 속도가 더 빠름
+		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+		
+		int A = Integer.parseInt(st.nextToken());
+		int B = Integer.parseInt(st.nextToken());
+		int V = Integer.parseInt(st.nextToken());
+		
+		
+		int i = (V-B) / (A-B);
+		
+		if ((V-B) % (A-B) != 0) {
+			i++;
+		}
+
+		bw.write(String.valueOf(i));
+		bw.newLine();
+		bw.flush();
+		
+		br.close();
+		bw.close();
+	}
+}//class
+
+

@@ -1,0 +1,405 @@
+21.12.06.4회차
+===============================================================================
+*단계별로 풀어보기 
+===============================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+################################################################################################################
+예제11)단계별로 풀어보기 / 1차원배열 / 평균은 넘겠지
+
+
+https://www.acmicpc.net/problem/4344
+################################################################################################################
+
+
+
+
+답:
+
+
+
+
+
+
+
+
+
+package backjun;
+
+import java.util.*;
+
+public class Main {
+	private static final Scanner scan = new Scanner(System.in);  
+	
+	public static void main(String[] args) {
+		int caseCount = scan.nextInt();
+	
+		for (int i = 0; i < caseCount; i++) {
+			int countInCase = scan.nextInt();
+			int[] arr = new int[countInCase];
+			int sum = 0;
+			
+			for (int j = 0; j < countInCase; j++) {
+				arr[j] = scan.nextInt();
+				sum += arr[j];
+			}
+			
+			double avg = sum / (double) countInCase;
+			
+			Arrays.sort(arr);
+			
+			int j = countInCase - 1;
+			int count = 0;
+			
+			while (arr[j] > avg) {
+				count++;
+				j--;
+			}
+			
+			double result = ((double) count / countInCase) * 100;
+			System.out.printf("%.3f%%\n", result);
+		}
+	
+	}//method
+}//class
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+################################################################################################################
+예제12)단계별로 풀어보기 / 함수 / 셀프넘버
+
+*출력할때 selfNumber를 검사하면서 매번 출력하면 속도가 느리니까 문자열을 업그레이드한 api를 이용하여
+ 	하나로 만든 뒤 한번의 출력만을 사용하라.
+
+https://www.acmicpc.net/problem/4673
+################################################################################################################
+
+
+
+
+답:
+
+
+package backjun;
+
+import java.util.*;
+
+public class Main {
+	private static final Scanner scan = new Scanner(System.in);  
+	
+	public static void main(String[] args) {
+		boolean[] notSelfNumber = new boolean[10001];
+		
+		for (int i = 1; i < 10001; i++) {
+			int numberWithConstructor = d(i);
+			
+			if (numberWithConstructor > 10000) {
+				continue;
+			}
+			
+			notSelfNumber[numberWithConstructor] = true; // notSelfNumber 배열 내에 값이 true인 index는 selfNumber가 아닌 것이다.  
+		}
+		
+		findSelfNum(notSelfNumber);
+	}//method
+	
+	public static int d(int n) {
+		int tmp = n;
+		int sum = n;
+		
+		while (tmp != 0) {
+			sum += tmp % 10;
+			tmp /= 10;
+		}
+		
+		return sum;
+	}
+	
+	public static void findSelfNum(boolean[] notSelfNumber) {
+		StringBuilder sb = new StringBuilder();
+		
+		for (int i = 1; i <= 10000; i++) {
+			if (!notSelfNumber[i]) {
+				sb.append(i).append('\n');
+			}
+		}
+		
+		System.out.println(sb);
+	}
+}//class
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+################################################################################################################
+예제13)단계별로 풀어보기 / 함수 / 한수
+
+*list의 내림차순정렬, 오름차순정렬을 연습해봐라
+*list의 내용을 뒤집어봐라
+
+https://www.acmicpc.net/problem/1065
+################################################################################################################
+
+
+
+
+답:
+
+
+
+
+
+package backjun;
+
+import java.util.*;
+
+public class Main {
+	private static final Scanner scan = new Scanner(System.in);  
+	
+	public static void main(String[] args) {
+		int number = scan.nextInt();
+		int answer = checkNumber(number);
+		System.out.println(answer);
+	}//method
+
+	
+	public static int checkNumber(int number) {
+		if (number < 100) {
+			return number;
+		}
+		
+		int count = 99;
+		for (int i = 100; i <= number; i++) {
+			List<Integer> list = getTheDigits(i);
+			boolean arithmeticSequence = isArithmeticSequence(list);
+			
+			if (arithmeticSequence) {
+				count++;
+			}
+		}
+		
+		return count;
+	}
+	
+	
+	private static ArrayList<Integer> getTheDigits(int number) {
+		ArrayList<Integer> list = new ArrayList<Integer>();
+		
+		while (number != 0) {
+			list.add(number % 10);
+			number /= 10;
+		}
+		
+		Collections.reverse(list);
+		return list;
+	}
+	
+	private static boolean isArithmeticSequence(List<Integer> list) {
+		boolean flag = true;
+		int defaultDifference = list.get(0) - list.get(1);
+		
+		for (int i = 1; i < list.size()-1; i++) {
+			int nowDifference = list.get(i) - list.get(i+1);
+			
+			if (nowDifference != defaultDifference) {
+				flag = false;
+				break;
+			}
+		}
+		
+		return flag;
+	}
+}//class
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+################################################################################################################
+예제14)단계별로 풀어보기 / 문자열 / 단어공부
+
+*두번째 답으로도 풀어보시오(성능은 내가 푼게 더 좋음 메모리, 속도)
+
+https://www.acmicpc.net/problem/1157
+################################################################################################################
+
+
+
+
+내 답(중복되는 문자 제거한 후 각 문자가 문자열에서 몇개있는지 확인하여 max값 구한 뒤 해당하는 문자 출력):
+
+
+
+
+
+
+package backjun;
+
+import java.util.*;
+
+public class Main {
+	private static final Scanner scan = new Scanner(System.in);  
+	
+	public static void main(String[] args) {
+		String str = scan.next();
+		
+		String tmp = str.toUpperCase();
+		List<Integer> list = new ArrayList<Integer>();
+		List<Character> list2 = new ArrayList<>();
+		Set<Character> set = new HashSet<>();
+		
+		for (int i = 0; i < tmp.length(); i++) {
+			set.add(tmp.charAt(i));
+		}
+		
+		Iterator<Character> iter = set.iterator();
+
+		while (iter.hasNext()) {
+			char ch = iter.next();
+			int count = charCount(tmp, ch);
+			list.add(count);						
+			list2.add(ch);						
+		}
+
+		int max = list.get(0);
+		int idx = 0;
+		
+		for (int i = 1; i < list.size(); i++) {
+			if (max < list.get(i)) {
+				max = list.get(i);
+				idx = i;
+			}
+		}
+		
+		int count = 0;
+		for (int i = 0; i < list.size(); i++) {
+			if (max == list.get(i)) {
+				count++;
+			}
+		}
+		
+		if (count > 1) {
+			System.out.println("?");
+		} else {
+			System.out.println(list2.get(idx));
+		}
+	}//method
+	
+	public static int charCount(String str, char ch) {
+		return str.length() - str.replace(String.valueOf(ch), "").length();
+	}
+}//class
+
+
+
+
+
+
+
+
+
+
+
+
+다른사람 답(알파벳 배열 26개 크기 만들고 하나하나 살펴서 알파벳당 갯수 세기):
+
+
+
+
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+
+        Scanner scan = new Scanner(System.in);
+        String[] str = scan.nextLine().toUpperCase().replace(" ", "").split("");
+        int[] array = new int[26];
+        char result = '?';
+        int j = 0;
+        for (String s : str) {
+            array[s.charAt(0) - 65] += 1;
+        }
+        for (int i = 0; i < array.length; i++) {
+            if (j < array[i]) {
+                result = (char) (i + 65);
+                j = array[i];
+            } else if (j == array[i]) {
+                result = '?';
+            }
+        }
+        System.out.println(result);
+        scan.close();
+    }
+}
