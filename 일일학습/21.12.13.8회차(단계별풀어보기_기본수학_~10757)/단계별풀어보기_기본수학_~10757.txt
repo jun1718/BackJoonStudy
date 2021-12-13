@@ -1,0 +1,226 @@
+21.12.13.8회차
+===============================================================================
+*단계별로 풀어보기 
+===============================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+################################################################################################################
+예제26)단계별로 풀어보기 / 기본수학 / 설탕배달
+
+https://www.acmicpc.net/problem/2839
+################################################################################################################
+
+
+답 : 
+
+
+***규칙찾기
+n = 입력되는 양
+c = 입력되는 양의 포장갯수(count)
+/ = n /5 의 값들의 집한인 행임을 의미하는 기호
+% = n % 5 의 값들의 집합인 행임을 의미하는 기호
+x = -1;
+
+n 3 4 	5 6 7 8 9 	10 11 12 13 14 		15 16 17 18 19		20 21 22 23 24
+c 1 x 	1 2 x 2 3  	2  3  4  3  4  		3   4 5  4   5           4  5  6  5 6
+/ 0 0 	1 1 1 1 1  	2  2  2  2  2  		3   3 3  3   3		 4  4  4  4 4
+% 3 4 	0 1 2 3 4  	0  1  2  3  4  		0   1  2  3  4           0  1  2  3  4 
+
+
+
+
+package backjun;
+import java.util.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
+import java.io.IOException;
+import java.util.StringTokenizer;
+
+public class Main {
+//	private static final Scanner scan = new Scanner(System.in);
+	private static final int FIVE_KG = 5;
+
+	
+	public static void main(String[] args) throws IOException {	
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+		
+
+		int total = Integer.parseInt(br.readLine());
+		int result = calcCount(total);
+
+		
+		bw.write(String.valueOf(result));
+		bw.newLine();
+		bw.flush();
+		bw.close();
+		br.close();
+	}
+	
+	
+	public static int calcCount(int total) {
+		if (total == 7 || total == 4) {
+			return -1;
+		}
+		
+		int fiveKgCount = total / FIVE_KG;		
+		int remainder = total % FIVE_KG;
+		
+		if (remainder == 0) {
+			return fiveKgCount;
+		}
+		
+		if (remainder == 1 || remainder == 3) {
+			return fiveKgCount + 1;
+		}
+		
+		if (remainder == 2 || remainder == 4) {
+			return fiveKgCount + 2;
+		}
+		
+		return 0;
+	}
+}//class
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+################################################################################################################
+예제27)단계별로 풀어보기 / 기본수학 / 큰 수 A+B
+
+*API를 이용해서 간단히 풀기
+*String과 int배열을 이용해서 복잡하게 풀어보기
+
+https://www.acmicpc.net/problem/10757
+################################################################################################################
+
+
+API를 이용한 답 : 
+
+package backjun;
+import java.util.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
+import java.math.BigInteger;
+import java.io.IOException;
+import java.util.StringTokenizer;
+
+public class Main {
+//	private static final Scanner scan = new Scanner(System.in);
+
+	
+	public static void main(String[] args) throws IOException {	
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+		StringTokenizer st = new StringTokenizer(br.readLine());
+
+		BigInteger A = new BigInteger(st.nextToken());
+		BigInteger B = new BigInteger(st.nextToken());
+		A = A.add(B);
+		
+		bw.write(String.valueOf(A));
+		bw.newLine();
+		
+		bw.flush();
+		bw.close();
+		br.close();
+	}
+}//class
+
+
+
+String과 int배열을 이용한 답 :
+
+package backjun;
+import java.util.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
+import java.math.BigInteger;
+import java.io.IOException;
+import java.util.StringTokenizer;
+
+public class Main {
+//	private static final Scanner scan = new Scanner(System.in);
+
+	
+	public static void main(String[] args) throws IOException {	
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		StringBuilder sb = new StringBuilder();
+		
+		String strA = st.nextToken();
+		String strB = st.nextToken();
+
+		int maxLength = Math.max(strA.length(), strB.length());
+		int[] A = new int[maxLength];
+		int[] B = new int[maxLength];
+		int[] result = new int[maxLength + 1];
+		
+		for (int i = strA.length() - 1, index = 0; i >= 0; i--, index++) {
+			A[index] = strA.charAt(i) - 48;
+		}
+
+		for (int i = strB.length() - 1, index = 0; i >= 0; i--, index++) {
+			B[index] = strB.charAt(i) - 48;
+		}
+		
+		for (int i = 0; i < maxLength; i++) {
+			int value = A[i] + B[i];
+			result[i] += value;
+			result[i + 1] = result[i] / 10;
+			result[i] %= 10;
+		}
+		
+		
+		if (result[maxLength] != 0) {
+			sb.append(1);
+		}
+		
+		for (int i = maxLength - 1; i >= 0; i--) {
+			sb.append(result[i]);
+		}
+		
+		bw.write(sb.toString());
+		bw.newLine();
+		
+		bw.flush();
+		bw.close();
+		br.close();
+	}
+}//class
+
