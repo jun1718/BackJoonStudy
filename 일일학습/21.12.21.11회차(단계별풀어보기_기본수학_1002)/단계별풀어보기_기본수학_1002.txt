@@ -1,0 +1,275 @@
+21.12.21.11회차
+===============================================================================
+*단계별로 풀어보기 
+===============================================================================
+
+
+
+
+
+
+
+################################################################################################################
+예제37)단계별로 풀어보기 / 기본수학2 / 직각삼각형
+
+https://www.acmicpc.net/problem/4153
+################################################################################################################
+
+
+답 : 
+
+package backjun;
+
+import java.util.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
+import java.math.BigInteger;
+import java.io.IOException;
+import java.util.StringTokenizer;
+
+public class Main {	
+	
+	public static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	public static BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+	public static final int LENGTH_COUNT = 3;
+	
+	public static void main(String[] args) throws IOException {	
+		while (true) {
+			int[] array = new int[LENGTH_COUNT];
+			inputData(array);
+			if (array[2] == 0) {
+				break;
+			}
+			
+			checkRight(array);
+		}
+		
+		bw.flush();
+		bw.close();
+		
+		br.close();
+	}
+	
+	public static void inputData(int[] array) throws IOException {
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		
+		for (int i = 0; i < 3; i++) {
+			array[i] = Integer.parseInt(st.nextToken());
+		}
+		Arrays.sort(array);
+	}
+	
+	public static void checkRight(int[] array) throws IOException {
+		int test = (array[0] * array[0]) + (array[1] * array[1]); 
+		int compare = (array[2] * array[2]);
+		
+		if (test == compare) {
+			bw.write("right");
+			bw.newLine();
+			return;
+		} 
+		
+		bw.write("wrong");
+		bw.newLine();
+	}
+	
+}//class
+
+
+
+
+
+
+################################################################################################################
+예제38)단계별로 풀어보기 / 기본수학2 / 택시 기하학(멘허튼거리)
+
+*유클리드 기하학과 택시기하학의 거리기준을 알아야한다
+	-유클리드는 대각선 최단거리 기준이고 택시기하학은 새로운 거리개념을 창안한 것이다.
+	-그래서 원의 개념은 같지만 형태는 다르다.
+
+https://www.acmicpc.net/problem/3053
+################################################################################################################
+
+
+답 : 
+
+
+package backjun;
+
+import java.util.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
+import java.math.BigInteger;
+import java.io.IOException;
+import java.util.StringTokenizer;
+
+public class Main {	
+	
+	public static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	public static BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+	public static final int LENGTH_COUNT = 3;
+	
+	public static void main(String[] args) throws IOException {	
+		
+		int r = Integer.parseInt(br.readLine());
+		
+		double areaOfEuclid = Math.PI * r * r;
+		double areaOfTaxi = 2 * r * r;
+		
+		bw.write(String.valueOf(areaOfEuclid));
+		bw.newLine();
+		bw.write(String.valueOf(areaOfTaxi));
+		bw.newLine();
+		
+		bw.flush();
+		bw.close();
+		
+		br.close();
+	}
+	
+	
+}//class
+
+
+
+
+
+
+
+
+
+################################################################################################################
+예제39)단계별로 풀어보기 / 기본수학2 / 터렛
+
+*무한대인경우가 제일앞에 안나오면 -1이 아닌 1이 출력됨
+	-이유는 무한대인 경우가 내접의 경우에 포함되기때문임 ㄷㄷ;
+*double로 == 비교가 들어가는 경우 부동소수의 오차가 발생하여 문제 틀린걸로 됨 ㄷㄷ; 다 int로 바꿔서 할것
+
+https://www.acmicpc.net/problem/1002
+
+참고!
+https://st-lab.tistory.com/90	-전체적으로 선이나 색깔이 잘칠해져있지면 2개의 경우 도식이 없음
+https://nahwasa.com/58		-이게 좌표수 2개의 경우(접점 2개)까지 설명함
+					-여기서 케이스 1개를 더 보여줌(AB가 동일한 위치이고 반지름이 다른 경우)
+################################################################################################################
+
+
+답 : 
+
+
+
+
+접점이 없는 경우: 
+	-AB가 동일하지 않은 위치
+		-너무 멀리있는 경우 : (x2 - x1)^2 + (y2 - y1)^2 > (r2 + r1)^2
+		-안에 있지만 반지름이 짧은 경우 : (x2 - x1)^2 + (y2 - y1)^2 < (r2 - r1)^2
+	-AB가 동일한 위치이고 둘의 r이 다른 경우 : x1 = x2, y1 = y2, r2 != r1
+
+접점이 1개인 경우:
+	-내접 : (x2 - x1)^2 + (y2 - y1)^2 = (r2 - r1)^2 // (r1 - r2)^2 같음 왜냐면 루트넘기면 절대값처리하니까
+							// 다만 B - A 형태를 취하고 있으니 r2 - r1을 적은 것 뿐(통일목적)
+		-> ((x2 - x1)^2 + (y2 - y1)^2)^(1/2) = |r2 - r1|
+	-외접 : (x2 - x1)^2 + (y2 - y1)^2 = (r2 + r1)^2
+
+접점이 2개인 경우: (x2 - x1)^2 + (y2 - y1)^2 < (r2 + r1)^2
+
+접점이 무한대인 경우: x1 = x2, y1 = y2, r1 = r2
+	-두 원의 중심이 같고 반지름이 같을때
+
+
+
+
+package backjun;
+
+import java.util.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
+import java.math.BigInteger;
+import java.io.IOException;
+import java.util.StringTokenizer;
+
+public class Main {	
+	public static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	public static BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+	public static int x1;
+	public static int y1;
+	public static int r1;
+	public static int x2;
+	public static int y2;
+	public static int r2;
+	
+	public static void main(String[] args) throws IOException {	
+		int T = Integer.parseInt(br.readLine());
+		for (int i = 0; i < T; i++) {
+			int count = calcLocationCount();
+			putBuffer(count);
+		}
+		
+		bw.flush();
+		bw.close();
+		br.close();
+	}
+	
+	public static int calcLocationCount() throws IOException {
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		
+		x1 = Integer.parseInt(st.nextToken()); 
+		y1 = Integer.parseInt(st.nextToken()); 
+		r1 = Integer.parseInt(st.nextToken()); 
+		x2 = Integer.parseInt(st.nextToken()); 
+		y2 = Integer.parseInt(st.nextToken()); 
+		r2 = Integer.parseInt(st.nextToken()); 
+		
+		int count = checkCircleShape(); 
+		return count;
+	}
+	
+	private static int checkCircleShape() { // 두 지점을 원으로 만들었을때의 모양을 확인한 후 모양에 따른 갯수를 반환하는 메서드
+		int distance =  (int) (Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+		int subtract = (int) Math.pow(r2 - r1, 2);
+		int add = (int) Math.pow(r1 + r2, 2);
+
+		// 무한대인 경우			
+		if (distance == 0 && r1 == r2) {
+			return -1;
+		}
+		
+		// 0개인 경우
+		if (distance < subtract || distance > add) {
+			return 0;
+		}
+		
+		/* 해당 경우는 위 조건의 첫번째 경우에 속함으로 주석가능. 혹여나 위의  r1,r2에 관련된
+		 * 값을 절대값 처리 안한다면 반드시 해당 경우 주석풀어서 입력되어야함.
+		 *	if (x1 == x2 && y1 == y2 && r1 != r2) {
+		 * 
+		 *		return 0;
+		 *	}
+		 */
+				
+		// 1개인 경우
+		if (distance == subtract || distance == add) {
+			return 1;
+		}
+		
+		// 2개인 경우
+		if (distance < add) {
+			return 2;
+		}
+		
+		
+		return -5; // 의미없는 값
+	}
+	
+	public static void putBuffer(int count) throws IOException {
+		bw.write(String.valueOf(count));
+		bw.newLine();
+	}
+}//class
+
