@@ -4618,3 +4618,354 @@ public class Main {
 }//class
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+21.12.22.12회차
+===============================================================================
+*단계별로 풀어보기 
+===============================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+################################################################################################################
+예제40)단계별로 풀어보기 / 재귀 / 팩토리얼
+
+https://www.acmicpc.net/problem/10872
+################################################################################################################
+
+
+답 : 
+
+package backjun;
+
+import java.util.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
+import java.math.BigInteger;
+import java.io.IOException;
+import java.util.StringTokenizer;
+
+public class Main {	
+	public static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	public static BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+	
+	public static void main(String[] args) throws IOException {	
+		int N = Integer.parseInt(br.readLine());
+		int result = calcFactorial(N);
+		bw.write(String.valueOf(result));
+		bw.newLine();
+		
+		bw.flush();
+		bw.close();
+		br.close();
+	}
+	
+	public static int calcFactorial(int N) {
+		if (N == 0) {
+			return 1;
+		}
+		if (N == 1) {
+			return 1;
+		}
+		return N * calcFactorial(N-1);
+	}
+
+}//class
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+################################################################################################################
+예제41)단계별로 풀어보기 / 재귀 / 피보나치 수 5
+
+
+https://www.acmicpc.net/problem/10870
+################################################################################################################
+
+
+답 : 
+
+
+
+package backjun;
+
+import java.util.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
+import java.math.BigInteger;
+import java.io.IOException;
+import java.util.StringTokenizer;
+
+public class Main {	
+	public static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	public static BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+	
+	public static void main(String[] args) throws IOException {	
+		int n = Integer.parseInt(br.readLine());
+		int result = calcFibonacci(n);
+		
+		bw.write(String.valueOf(result));
+		bw.newLine();
+		
+		bw.flush();
+		bw.close();
+		br.close();
+	}
+	
+	public static int calcFibonacci(int n) {
+		if (n == 0) {
+			return 0;
+		}
+		if (n == 1) {
+			return 1;
+		}
+		if (n == 2) {
+			return 1;
+		}
+		
+		return calcFibonacci(n - 2) + calcFibonacci(n - 1);
+	}
+
+}//class
+
+
+
+
+
+
+
+
+
+
+
+
+날 안아 주세요~~~~~
+불빛 처럼~~
+가까이~ (가까이~) 다가와(다가와~) 함께 있을래요오~ 
+날안아 주세요~~ 후우와아아아
+
+
+
+
+
+
+################################################################################################################
+예제42)단계별로 풀어보기 / 재귀 / 별 찍기 - 10
+
+*StringBuilder를 이용해서 bw.write()를 한번만 사용하여 출력도 한번만 하라
+	-까먹지 않게 연습
+
+https://www.acmicpc.net/problem/2447
+################################################################################################################
+
+
+답 : 
+
+
+  0 1 2 3 4 5 6 7 8
+0 * * * * * * * * *
+1 *   * *   * *   *
+2 * * * * * * * * *
+3 * * *       * * *
+4 *   *       *   *
+5 * * *       * * *
+6 * * * * * * * * *             
+7 *   * *   * *   *
+8 * * * * * * * * *
+
+
+
+package backjun;
+
+import java.util.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
+import java.math.BigInteger;
+import java.io.IOException;
+import java.util.StringTokenizer;
+
+public class Main {	
+	public static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	public static BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+	
+	public static char[][] arr;
+
+	
+	public static void main(String[] args) throws IOException {	
+		int n = Integer.parseInt(br.readLine());
+		StringBuilder sb = new StringBuilder();
+		
+		arr = new char[n][n];
+		putStar(0, 0, n, false);
+		
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < n; j++) {
+				sb.append(arr[i][j]);
+			}
+			sb.append("\n");
+		}
+		
+		bw.write(sb.toString());
+		bw.newLine();
+		
+		bw.flush();
+		bw.close();
+		br.close();
+	}
+	
+	public static void putStar(int x, int y, int n, boolean blank) {
+		
+		if (blank) {
+			for (int i = x; i < x + n; i++) {
+				for (int j = y; j < y + n; j++) {
+					arr[i][j] = ' ';
+				}
+			}
+			
+			return;
+		}
+		
+		if (n == 1) {
+			arr[x][y] = '*';
+			return;
+		}
+		
+		int size = n / 3;
+		int count = 0;
+		
+		for (int i = x; i < x + n; i += size) {
+			for (int j = y; j < y + n; j += size) {
+				count++;
+				
+				if (count == 5) {
+					putStar(i, j, size, true);
+				} else {
+					putStar(i, j, size, false);
+				}
+			}
+		}
+	
+	}
+
+
+	 
+	 
+	 
+}//class
