@@ -1,0 +1,64 @@
+21.12.26.13회차
+===============================================================================
+*단계별로 풀어보기 
+===============================================================================
+
+
+
+
+
+
+################################################################################################################
+예제43)단계별로 풀어보기 / 재귀 / 하노이 탑 이동 순서
+
+https://www.acmicpc.net/problem/11729
+################################################################################################################
+
+
+답 : 
+
+
+
+
+package backjun;
+
+import java.util.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
+import java.math.BigInteger;
+import java.io.IOException;
+import java.util.StringTokenizer;
+
+public class Main {	
+	public static BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+	
+	public static void main(String[] args) throws IOException {			
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		int n = Integer.parseInt(br.readLine());
+		bw.write("" + (int) (Math.pow(2, n) - 1));
+		bw.newLine();
+		
+		hanoi(n, 1, 2, 3);
+		
+		bw.flush();
+		bw.close();
+		br.close();
+	}
+	
+	public static void hanoi(int n, int from, int by, int to) throws IOException {
+		if (n == 1) {
+			bw.write(from + " " + to);
+			bw.newLine();
+			return;
+		}
+		
+		hanoi(n - 1, from, to, by);
+		
+		bw.write(from + " " + to);
+		bw.newLine();
+		
+		hanoi(n - 1, by, from, to);
+	}
+}//class

@@ -4969,3 +4969,948 @@ public class Main {
 	 
 	 
 }//class
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+21.12.26.13회차
+===============================================================================
+*단계별로 풀어보기 
+===============================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+################################################################################################################
+예제43)단계별로 풀어보기 / 재귀 / 하노이 탑 이동 순서
+
+https://www.acmicpc.net/problem/11729
+################################################################################################################
+
+
+답 : 
+
+
+
+
+package backjun;
+
+import java.util.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
+import java.math.BigInteger;
+import java.io.IOException;
+import java.util.StringTokenizer;
+
+public class Main {	
+	public static BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+	
+	public static void main(String[] args) throws IOException {			
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		int n = Integer.parseInt(br.readLine());
+		bw.write("" + (int) (Math.pow(2, n) - 1));
+		bw.newLine();
+		
+		hanoi(n, 1, 2, 3);
+		
+		bw.flush();
+		bw.close();
+		br.close();
+	}
+	
+	public static void hanoi(int n, int from, int by, int to) throws IOException {
+		if (n == 1) {
+			bw.write(from + " " + to);
+			bw.newLine();
+			return;
+		}
+		
+		hanoi(n - 1, from, to, by);
+		
+		bw.write(from + " " + to);
+		bw.newLine();
+		
+		hanoi(n - 1, by, from, to);
+	}
+}//class
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+21.12.27.14회차
+===============================================================================
+*단계별로 풀어보기 
+===============================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+################################################################################################################
+예제44)단계별로 풀어보기 / 브루트 포스 / 블랙잭
+
+*리스트에 넣는 방식이 있지만 안넣어도 해결가능하다 그방식으로 풀어라
+*간격이(공차)가 같은 등차수열이라면 list나 result를 사용하지 않아도 for문순서에 따라 가장 먼저 나오는 sum값이
+	가장 큰값이 나와서 괜찮지만 간격이 다르면 모든 경우를 다 살펴봐야한다.
+
+https://www.acmicpc.net/problem/2798
+################################################################################################################
+
+답(list 안쓴 답) 이게 가장 효율 빠름 : 
+
+package backjun;
+
+import java.util.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
+import java.math.BigInteger;
+import java.io.IOException;
+
+public class Main {	
+	public static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	public static StringTokenizer st;
+	public static List<Integer> list = new ArrayList<>();
+	
+	public static void main(String[] args) throws IOException {			
+		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+		st = new StringTokenizer(br.readLine());
+		
+		int N = Integer.parseInt(st.nextToken());
+		int M = Integer.parseInt(st.nextToken());
+		
+		int result = getBlack(N, M);
+		bw.write(String.valueOf(result));
+		bw.newLine();
+		
+		bw.flush();
+		bw.close();
+		br.close();
+	}
+	
+	public static int getBlack(int N, int M) throws IOException {
+		int[] arr = new int[N];
+		inputCard(arr, N);
+		int black = compareCard(arr, N, M);
+		
+		return black;
+	}
+	
+	private static void inputCard(int[] arr, int N) throws IOException {
+		st = new StringTokenizer(br.readLine());
+		
+		for (int i = 0; i < N; i++) {
+			arr[i] = Integer.parseInt(st.nextToken());
+		}
+		
+	}
+	
+	private static int compareCard(int[] arr, int N, int M) {
+		Arrays.sort(arr);
+		int result = 0;
+		for (int i = N - 1; i >= 2; i--) {
+			int A = arr[i];
+			for (int j = i - 1; j >= 1; j--) {
+				int B = arr[j];
+				if (A + B >= M) {
+					continue;
+				}
+				
+				for (int j2 = j - 1; j2 >= 0; j2--) {
+					int C = arr[j2];
+					int sum = A + B + C;
+					
+					if (sum == M) {
+						return sum;
+					}
+					
+					if (result < sum && sum < M) {
+						result = sum;
+					}
+				}
+			}
+		}
+		
+		return result;
+	}
+
+}//class
+
+
+
+
+답(list 쓴 답) : 
+
+
+
+package backjun;
+
+import java.util.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
+import java.math.BigInteger;
+import java.io.IOException;
+
+public class Main {	
+	public static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	public static StringTokenizer st;
+	public static List<Integer> list = new ArrayList<>();
+	
+	public static void main(String[] args) throws IOException {			
+		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+		st = new StringTokenizer(br.readLine());
+		
+		int N = Integer.parseInt(st.nextToken());
+		int M = Integer.parseInt(st.nextToken());
+		
+		int result = getBlack(N, M);
+		bw.write(String.valueOf(result));
+		bw.newLine();
+		
+		bw.flush();
+		bw.close();
+		br.close();
+	}
+	
+	public static int getBlack(int N, int M) throws IOException {
+		int[] arr = new int[N];
+		inputCard(arr, N);
+		int black = compareCard(arr, N, M);
+		
+		return black;
+	}
+	
+	private static void inputCard(int[] arr, int N) throws IOException {
+		st = new StringTokenizer(br.readLine());
+		
+		for (int i = 0; i < N; i++) {
+			arr[i] = Integer.parseInt(st.nextToken());
+		}
+		
+	}
+	
+	private static int compareCard(int[] arr, int N, int M) {
+		Arrays.sort(arr);
+		System.out.println(Arrays.toString(arr));
+		for (int i = N - 1; i >= 2; i--) {
+			int A = arr[i];
+			
+			for (int j = i - 1; j >= 1; j--) {
+				int B = arr[j];
+				if (A + B >= M) {
+					continue;
+				}
+				
+				for (int j2 = j - 1; j2 >= 0; j2--) {
+					int C = arr[j2];
+					int sum = A + B + C;
+					
+					if (sum == M) {
+						return sum;
+					}
+					
+					if (sum < M) {
+						System.out.printf("A : %d, B : %d, C : %d, sum : %d\n", A, B, C, sum);
+						list.add(sum);
+					}
+				}
+			}
+		}
+		
+		int maxList = getMaxList();
+		return maxList;
+	}
+	
+	private static int getMaxList() {
+		Collections.sort(list);
+		int maxList = list.get(list.size() - 1);
+		
+		return maxList;
+	}
+}//class
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+################################################################################################################
+예제45)단계별로 풀어보기 / 브루트 포스 / 분해합
+
+https://www.acmicpc.net/problem/2231
+################################################################################################################
+
+
+답 : 
+
+
+package backjun;
+
+import java.util.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
+import java.math.BigInteger;
+import java.io.IOException;
+
+public class Main {	
+
+	
+	public static void main(String[] args) throws IOException {			
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+		
+		int N = Integer.parseInt(br.readLine());
+		
+		int result = calc(N);
+	
+		bw.write(String.valueOf(result));
+		bw.newLine();
+		
+		bw.flush();
+		bw.close();
+		br.close();
+	}
+	
+	public static int calc(int N) {
+		for (int i = 1; i < N; i++) {
+			int sum = getSumOfNumberOfDigits(i) + i;
+			
+			if (sum == N) {
+				return i;
+			}
+		}
+		
+		return 0;
+	}
+	
+	private static int getSumOfNumberOfDigits(int num) {
+		if (num / 10 == 0) {
+			return num;
+		}
+		
+		int sum = 0;
+		while (num != 0) {
+			sum += num % 10;
+			num /= 10;
+		}
+	
+		return sum;
+	}
+	
+}//class
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+################################################################################################################
+예제46)단계별로 풀어보기 / 브루트 포스 / 덩치
+
+https://www.acmicpc.net/problem/7568
+################################################################################################################
+
+
+답 :
+
+
+package backjun;
+
+import java.util.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
+import java.math.BigInteger;
+import java.io.IOException;
+
+public class Main {	
+	public static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	public static BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+	
+	
+	public static void main(String[] args) throws IOException {			
+		
+		int N = Integer.parseInt(br.readLine());
+		int[][] arr = new int[N][2];
+		inputData(arr, N);
+		writeRank(arr, N);
+		
+		bw.flush();
+		bw.close();
+		br.close();
+	}
+	
+	public static void inputData(int[][] arr, int N) throws IOException {
+		for (int i = 0; i < N; i++) {
+			StringTokenizer st = new StringTokenizer(br.readLine());
+			arr[i][0] = Integer.parseInt(st.nextToken());
+			arr[i][1] = Integer.parseInt(st.nextToken());
+		}
+	}
+	
+	public static void writeRank(int[][] arr, int N) throws IOException {
+		for (int i = 0; i < N; i++) {
+			int rank = getRank(arr, N, i);
+			writeBuffer(rank);
+		}
+	}
+	
+	
+	private static int getRank(int[][] arr, int N, int index) {
+		int count = 0;
+		
+		for (int i = 0; i < N; i++) {
+			if (i == index) {
+				continue;
+			}
+			
+			if (arr[index][0] < arr[i][0] && arr[index][1] < arr[i][1]) {
+				count++;
+			}
+		}
+		
+		return count + 1;
+	}
+	
+	private static void writeBuffer(int rank) throws IOException {
+		bw.write(rank + " ");
+	}
+}//class
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+################################################################################################################
+예제47)단계별로 풀어보기 / 브루트 포스 / 체스판 다시 칠하기
+
+https://www.acmicpc.net/problem/1018
+################################################################################################################
+
+
+답 : 
+
+
+package backjun;
+
+import java.util.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
+import java.math.BigInteger;
+import java.io.IOException;
+
+public class Main {	
+	private static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	private static BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+	
+	private static boolean[][] whiteBoard = makeChessBoard("W"); 
+	private static boolean[][] blackBoard = makeChessBoard("B");
+	
+	private static boolean[][] makeChessBoard(String color) {
+		boolean[][] board = new boolean[8][8];
+		boolean white = true;
+		boolean black = false;
+		
+		
+		if (color.equals("W")) {
+			for (int i = 0; i < 8; i++) {
+				for (int j = 0; j < 8; j++) {
+					board[i][j] = white;
+					white = !white;
+				}
+				white = !white;
+			}			
+		}
+		
+		else if (color.equals("B")) {
+			for (int i = 0; i < 8; i++) {
+				for (int j = 0; j < 8; j++) {
+					board[i][j] = black;
+					black = !black;
+				}
+				black = !black;
+			}			
+			
+		}
+		
+		return board;
+	}
+	
+	public static void main(String[] args) throws IOException {			
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		int height = Integer.parseInt(st.nextToken());
+		int width = Integer.parseInt(st.nextToken());
+		
+		boolean[][] originBoard = inputOriginBoard(height, width);
+		int endPointY = height - 7;
+		int endPointX = width - 7;
+		
+		int result = 64;
+		
+		for (int i = 0; i < endPointY; i++) {
+			for (int j = 0; j < endPointX; j++) {
+				int numberOfChanges = getNumberOfChanges(originBoard, i, j);
+				result = Math.min(result, numberOfChanges);				
+			}
+		}
+		
+		bw.write(String.valueOf(result));
+		
+		// white black board 잚 만들어졌는지 확인
+//		for (int i = 0; i < 8; i++) {
+//			for (int j = 0; j < 8; j++) {
+//				System.out.print(whiteBoard[i][j] + " ");
+//			}
+//			System.out.println();
+//		}	
+//		
+//		System.out.println();
+//		System.out.println();
+//		
+//		for (int i = 0; i < 8; i++) {
+//			for (int j = 0; j < 8; j++) {
+//				System.out.print(blackBoard[i][j] + " ");
+//			}
+//			System.out.println();
+//		}	
+
+		// originBoard 확인
+//		for (int i = 0; i < height; i++) {
+//			for (int j = 0; j < width; j++) {
+//				System.out.print(originBoard[i][j] + " ");
+//			}
+//			System.out.println();
+//		}
+		
+		bw.flush();
+		bw.close();
+		br.close();
+	}
+	
+	public static boolean[][] inputOriginBoard(int height, int width) throws IOException {
+		boolean[][] originBoard = new boolean[height][width];
+		for (int i = 0; i < height; i++) {
+			String str = br.readLine();
+			for (int j = 0; j < width; j++) {
+				if (str.charAt(j) == 'W') {
+					originBoard[i][j] = true;
+				} else if (str.charAt(j) == 'B') {
+					originBoard[i][j] = false;
+				}
+			}
+		}
+		
+		return originBoard;
+	}
+	
+	public static int getNumberOfChanges(boolean[][] originBoard, int y, int x) {
+		int whiteCount = 0;
+		int blackCount = 0;
+		
+		for (int i = 0; i < 8; i++) {
+			for (int j = 0; j < 8; j++) {
+				if (whiteBoard[i][j] != originBoard[i + y][j + x]) {
+					whiteCount++;
+				}
+				
+				if (blackBoard[i][j] != originBoard[i + y][j + x]) {
+					blackCount++;
+				}
+			}
+		}
+		
+		return Math.min(whiteCount, blackCount);
+	}
+	
+}//class
+
+
+
+
+
+
+
+
+################################################################################################################
+예제48)단계별로 풀어보기 / 브루트 포스 / 영화감독 숌
+
+https://www.acmicpc.net/problem/1436
+################################################################################################################
+
+
+답 : 
+
+
+
+package backjun;
+
+import java.util.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
+import java.math.BigInteger;
+import java.io.IOException;
+
+public class Main {	
+	private static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	private static BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+	
+	
+	public static void main(String[] args) throws IOException {			
+		int N = Integer.parseInt(br.readLine());
+		
+		int result = calc(N);
+		bw.write(String.valueOf(result));
+
+		bw.flush();
+		bw.close();
+		br.close();
+	}
+	
+	public static int calc(int N) {
+		int count = 0;
+		int num = 666;
+		
+		while (count != N) {
+			if (String.valueOf(num).contains("666")) {
+				count++;
+			}
+			
+			num++;
+		}
+		
+		return num - 1;
+	}
+
+}//class
