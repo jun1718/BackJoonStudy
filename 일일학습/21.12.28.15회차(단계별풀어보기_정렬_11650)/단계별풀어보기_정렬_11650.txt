@@ -1,0 +1,430 @@
+21.12.28.15회차
+===============================================================================
+*단계별로 풀어보기 
+===============================================================================
+
+
+
+################################################################################################################
+예제49)단계별로 풀어보기 / 정렬 / 수 정렬하기 1 ~ 3
+
+*API로 다 됨
+
+https://www.acmicpc.net/problem/2750, 2751, 10989
+################################################################################################################
+
+
+답 : 
+
+
+package backjun;
+
+import java.util.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
+import java.math.BigInteger;
+import java.io.IOException;
+
+public class Main {	
+	private static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	private static BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+	
+	
+	public static void main(String[] args) throws IOException {			
+		int N = Integer.parseInt(br.readLine());
+		int[] arr = new int[N];
+		inputData(arr, N);
+		Arrays.sort(arr);
+		writeData(arr, N);
+
+		bw.flush();
+		bw.close();
+		br.close();
+	}
+	
+	public static void inputData(int[] arr, int N) throws IOException {
+		for (int i = 0; i < N; i++) {
+			arr[i] = Integer.parseInt(br.readLine());
+		}
+	}
+	
+	public static void writeData(int[] arr, int N) throws IOException {
+		for (int i = 0; i < N; i++) {
+			bw.write(arr[i] + "\n");
+		}
+	}
+}//class
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+################################################################################################################
+예제50)단계별로 풀어보기 / 정렬 / 통계학
+
+*hash map 보다 배열 인덱스에 의미를 부여하는 방법이 훨씬 빠르다
+
+인덱스 의미부여 답 속도 : 344 ms
+hash map 답 속도 : 860 ms
+
+https://www.acmicpc.net/problem/2108
+################################################################################################################
+
+
+
+답(배열내 공간을 8001개 만들어서 인덱스에 의미를 부여하여 풀어낸 방법):
+
+package backjun;
+
+import java.util.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
+import java.math.BigInteger;
+import java.io.IOException;
+
+public class Main {	
+	private static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	private static BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+	
+	
+	public static void main(String[] args) throws IOException {			
+		int N = Integer.parseInt(br.readLine());
+		int[] arr = new int[8001];
+		
+		int sum = 0;
+		int max = Integer.MIN_VALUE;
+		int min = Integer.MAX_VALUE;
+		
+		
+		for (int i = 0; i < N; i++) {
+			int value = Integer.parseInt(br.readLine());
+			arr[value + 4000]++;
+			
+			if (min > value) {
+				min = value;
+			}
+			
+			if (max < value) {
+				max = value;
+			}
+			
+			sum += value;
+		}
+		
+		
+		int age = (int) Math.round((double) sum / N);
+		int range = max - min;
+		
+		int count = 0;
+		int middle = 0;
+
+		int mode = 0;
+		int modeMax = Integer.MIN_VALUE;
+		boolean flag = false;
+		
+		for (int i = min + 4000; i <= max + 4000; i++) {
+			if (arr[i] > 0) {
+				if (count < (N + 1) / 2) {
+					count += arr[i];
+					middle = i - 4000;
+				}
+				
+				if (modeMax < arr[i]) {
+					modeMax = arr[i];
+					mode = i - 4000;
+					flag = true;
+				} else if (modeMax == arr[i] && flag) {
+					mode = i - 4000;
+					flag = false;
+				}
+			}
+		}	
+		
+		bw.write(age + "\n");
+		bw.write(middle + "\n");
+		bw.write(mode + "\n");
+		bw.write(range + "\n");
+		
+		bw.flush();
+		bw.close();
+		br.close();
+	}
+}//class
+
+
+
+
+
+답(N개의 공간만 배열로 만들어서 hashmap으로 최빈값을 구한 답) : 
+
+
+
+package backjun;
+
+import java.util.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
+import java.math.BigInteger;
+import java.io.IOException;
+
+public class Main {	
+	private static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	private static BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+	
+	
+	public static void main(String[] args) throws IOException {			
+		int N = Integer.parseInt(br.readLine());
+		int[] arr = new int[N];
+		inputData(arr, N);
+		Arrays.sort(arr);
+		estimate(arr, N);
+
+		bw.flush();
+		bw.close();
+		br.close();
+	}
+	
+	public static void inputData(int[] arr, int N) throws IOException {
+		for (int i = 0; i < N; i++) {
+			arr[i] = Integer.parseInt(br.readLine());
+		}
+	}
+	
+	public static void estimate(int[] arr, int N) throws IOException {
+		int avg = getAvg(arr, N);
+		int middle = getMiddle(arr, N);
+		int mode = getMode(arr, N);
+		int range = getRange(arr, N);
+		
+		bw.write(avg + "\n");
+		bw.write(middle + "\n");
+		bw.write(mode + "\n");
+		bw.write(range + "\n");
+	}
+	
+	private static int getAvg(int[] arr, int N) {
+		int sum = 0;
+		for (int i = 0; i < N; i++) {
+			sum += arr[i];
+		}
+		
+		int avg = (int) Math.round((double) sum / N);
+		
+		return avg;
+	}
+	
+	private static int getMiddle(int[] arr, int N) {
+		int middle = arr[N / 2];
+		return middle;
+	}
+	
+	private static int getMode(int[] arr, int N) {
+		Map<Integer, Integer> map = new HashMap<>();
+		for (int i = 0; i < N; i++) {
+			map.put(arr[i], map.getOrDefault(arr[i], 0) + 1);
+		}
+		
+		int max = 0;
+		List<Integer> list = new ArrayList<>();
+		for (int m : map.keySet()) {
+			max = Math.max(max, map.get(m));
+		}
+		
+		int count = 0;
+		for (int m : map.keySet()) {
+			if (max == map.get(m)) {
+				count++;
+				list.add(m);
+			}
+		}
+		
+		if (count == 1) {
+			return list.get(0);
+		} 
+	
+		Collections.sort(list);
+		
+		return list.get(1);
+	}
+	
+	private static int getRange(int[] arr, int N) {
+		return arr[N - 1] - arr[0]; 
+	}	
+}//class
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+################################################################################################################
+예제51)단계별로 풀어보기 / 정렬 / 소트인사이드
+
+https://www.acmicpc.net/problem/1427
+################################################################################################################
+
+
+답 : 
+
+
+
+
+
+
+package backjun;
+
+import java.util.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
+import java.math.BigInteger;
+import java.io.IOException;
+
+public class Main {	
+	private static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	private static BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+	
+	
+	public static void main(String[] args) throws IOException {			
+		String N = br.readLine();
+		int Nlen = N.length();
+		Integer[] arr = new Integer[Nlen];
+		
+		for (int i = Nlen - 1, j = 0; i >= 0; i--, j++) {
+			arr[j] = N.charAt(i) - 48;
+		}
+		
+		Arrays.sort(arr, Collections.reverseOrder());
+//		Arrays.sort(arr, Comparator.reverseOrder()); 두개다 똑같음 다만 두개 쓰려면 기본자료형 배열은 안됨(ex)int, double 등등/ String은 기본자료형 아니라서 사용 가능함
+		
+		StringBuilder result = new StringBuilder();
+		for (int i = 0; i < Nlen; i++) {
+			result.append(arr[i]);
+		}
+		
+		bw.write(result.toString());
+			
+		bw.flush();
+		bw.close();
+		br.close();
+	}
+}//class
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+################################################################################################################
+예제52)단계별로 풀어보기 / 정렬 / 좌표 정렬하기
+
+https://www.acmicpc.net/problem/11650
+################################################################################################################
+
+
+답 : 
+
+package backjun;
+
+import java.util.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
+import java.math.BigInteger;
+import java.io.IOException;
+
+public class Main {	
+	private static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	private static BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+	
+	
+	public static void main(String[] args) throws IOException {			
+		int N = Integer.parseInt(br.readLine());
+		int[][] arr = new int[N][2];
+		
+		for (int i = 0; i < N; i++) {
+			StringTokenizer st = new StringTokenizer(br.readLine());
+			arr[i][0] = Integer.parseInt(st.nextToken()); 
+			arr[i][1] = Integer.parseInt(st.nextToken()); 
+		}
+		
+		Comparator<int[]> comp = new Comparator<int[]>() {
+			@Override
+			public int compare(int[] x, int[] y) {
+				if (x[0] == y[0]) {
+					return Integer.compare(x[1], y[1]);
+				}
+				return Integer.compare(x[0], y[0]);
+			}
+		};
+		
+		Arrays.sort(arr, comp);
+		for (int i = 0; i < N; i++) {
+			bw.write(arr[i][0] + " " + arr[i][1] + "\n");
+		}
+		
+			
+		bw.flush();
+		bw.close();
+		br.close();
+	}
+}//class
