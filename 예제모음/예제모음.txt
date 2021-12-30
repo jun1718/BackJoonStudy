@@ -7189,3 +7189,593 @@ public class Main {
 		br.close();
 	}
 }//class
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+21.12.30.16회차
+===============================================================================
+*단계별로 풀어보기 
+===============================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+################################################################################################################
+예제53)단계별로 풀어보기 / 정렬 / 좌표 정렬하기 2
+
+https://www.acmicpc.net/problem/11651
+################################################################################################################
+
+
+답 : 
+
+
+
+
+package backjun;
+
+import java.util.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
+import java.math.BigInteger;
+import java.io.IOException;
+
+public class Main {	
+	private static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	private static BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+	
+	
+	public static void main(String[] args) throws IOException {			
+		int N = Integer.parseInt(br.readLine());
+		int[][] arr = new int[N][2];
+		
+		inputData(arr, N);
+		
+		Comparator<int[]> comp = new Comparator<int[]>() {
+			public int compare(int[] x, int[] y) {
+				if (x[1] == y[1]) {
+					return Integer.compare(x[0], y[0]);
+				}
+				return Integer.compare(x[1], y[1]);
+			}
+		};
+		
+		Arrays.sort(arr, comp);
+		writeData(arr, N);
+		
+		bw.flush();
+		bw.close();
+		br.close();
+	}
+	
+	public static void inputData(int[][] arr, int N) throws IOException {
+		for (int i = 0; i < N; i++) {
+			StringTokenizer st = new StringTokenizer(br.readLine());
+			arr[i][0] = Integer.parseInt(st.nextToken());
+			arr[i][1] = Integer.parseInt(st.nextToken());
+		}
+	}
+	
+	public static void writeData(int[][] arr, int N) throws IOException {
+		for (int i = 0; i < N; i++) {
+			bw.write(arr[i][0] + " " + arr[i][1]);
+			bw.newLine();
+		}
+	}
+}//class
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+################################################################################################################
+예제54)단계별로 풀어보기 / 정렬 / 단어 정렬
+
+https://www.acmicpc.net/problem/1181
+################################################################################################################
+
+
+답 : 
+
+
+
+
+package backjun;
+
+import java.util.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
+import java.math.BigInteger;
+import java.io.IOException;
+
+public class Main {	
+	private static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	private static BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+	
+	
+	public static void main(String[] args) throws IOException {			
+		int N = Integer.parseInt(br.readLine());
+
+		Set<String> tmpSet = new HashSet<>();
+		inputSet(tmpSet, N);
+		N = tmpSet.size();
+		
+		String[] arr = new String[N];
+		inputData(tmpSet, arr, N);
+
+		Comparator<String> comp = new Comparator<String>() {
+			public int compare(String x, String y) {
+				if (x.length() == y.length()) {
+					int result = x.compareTo(y);
+					return result;
+				}
+				return x.length() - y.length();
+			}
+		};
+		
+		Arrays.sort(arr, comp);
+		writeData(arr, N);
+		
+		bw.flush();
+		bw.close();
+		br.close();
+	}
+	
+	public static void inputSet(Set tmpSet, int N) throws IOException {
+		for (int i = 0; i < N; i++) {
+			String input = br.readLine();
+			tmpSet.add(input);
+		}
+	}
+	
+	public static void inputData(Set tmpSet, String[] arr, int N) throws IOException {
+		Iterator iter = tmpSet.iterator();
+		int i = 0;
+		
+		while (iter.hasNext()) {
+			arr[i] = (String) iter.next();
+			i++;
+		}
+	}
+	
+	public static void writeData(String[] arr, int N) throws IOException {
+		for (int i = 0; i < N; i++) {
+			bw.write(arr[i]);
+			bw.newLine();
+		}
+	}
+}//class
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+################################################################################################################
+예제55)단계별로 풀어보기 / 정렬 / 나이순 정렬
+
+https://www.acmicpc.net/problem/10814
+################################################################################################################
+
+
+답 : 
+
+package backjun;
+
+import java.util.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
+import java.math.BigInteger;
+import java.io.IOException;
+
+public class Main {	
+	private static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	private static BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+	
+	public static void main(String[] args) throws IOException {			
+		int N = Integer.parseInt(br.readLine());
+		String[][] arr = new String[N][2];
+		inputData(arr, N);
+		
+		Comparator<String[]> comp = new Comparator<String[]>() {
+			public int compare(String[] x, String[] y) {
+				int Xage = Integer.parseInt(x[0]);
+				int Yage = Integer.parseInt(y[0]);
+				
+				return Integer.compare(Xage, Yage);
+			}
+		};
+		
+		Arrays.sort(arr, comp);
+		writeData(arr, N);
+		
+		bw.flush();
+		bw.close();
+		br.close();
+	}
+	
+	public static void inputData(String[][] arr, int N) throws IOException {
+		for (int i = 0; i < N; i++) {
+			StringTokenizer st = new StringTokenizer(br.readLine());
+			String age = st.nextToken();
+			String name = st.nextToken();
+			
+			arr[i][0] = age;
+			arr[i][1] = name;
+		}
+	}
+	
+	public static void writeData(String[][] arr, int N) throws IOException {
+		for (int i = 0; i < N; i++) {
+			bw.write(arr[i][0] + " " + arr[i][1]);
+			bw.newLine();
+		}
+	}
+}//class
+
+
+
+
+
+
+
+
+
+################################################################################################################
+예제56)단계별로 풀어보기 / 정렬 / 좌표 압축
+
+https://www.acmicpc.net/problem/18870
+################################################################################################################
+
+
+답 : 
+
+
+
+
+package backjun;
+
+import java.util.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
+import java.math.BigInteger;
+import java.io.IOException;
+
+public class Main {	
+	private static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	private static BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+	private static HashMap<Integer, Integer> hm = new HashMap<>();
+	private static int hmLen = 0;
+	private static int[] valueArr;
+	
+	public static void main(String[] args) throws IOException {			
+		int N = Integer.parseInt(br.readLine());
+		int[] arr = new int[N];
+		
+		inputData(arr, N);
+		compressLocation();
+		writeData(arr, N);
+		
+		bw.flush();
+		bw.close();
+		br.close();
+	}
+	
+	public static void inputData(int[] arr, int N) throws IOException {
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		for (int i = 0; i < N; i++) {
+			int key = Integer.parseInt(st.nextToken()); 
+			arr[i] = key;
+			hm.put(key, 0);
+		}
+		
+		hmLen = hm.size();
+		valueArr = new int[hmLen];
+		inputData();
+	}
+	
+	private static void inputData() {
+		int i = 0;
+		for (int key : hm.keySet()) {
+			valueArr[i] = key;
+			i++;
+		}
+		
+		Arrays.sort(valueArr);
+	}
+
+	public static void compressLocation() {
+		for (int i = 0; i < hmLen; i++) {
+			hm.put(valueArr[i], i);
+		}
+	}
+	
+	public static void writeData(int[] arr, int N) throws IOException {
+		for (int i = 0; i < N; i++) {
+			String location = String.valueOf(hm.get(arr[i])) + " ";
+			bw.write(location);
+		}
+	}
+
+}//class
+
+
+
