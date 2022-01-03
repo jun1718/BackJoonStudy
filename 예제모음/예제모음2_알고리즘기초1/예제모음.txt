@@ -1267,3 +1267,499 @@ public class Main {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+21.01.03.19회차
+===============================================================================
+*알고리즘 기초 1 / 2
+===============================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+################################################################################################################
+예제9)알고리즘 기초 1 / 자료구조 1 (연습) / 단어 뒤집기 2
+
+*deque를 응용해서 풀어라
+	-응용한경우 : 296ms
+	-응용 안한경우 : 1708ms
+
+https://www.acmicpc.net/problem/17413
+################################################################################################################
+
+
+답(deque를 효율적으로 이용하여 que와 stack을 동시에 사용하기):
+	-단어를 나누지 않음. stack, que 두개를 선언한 다른사람의 방식을 응용한것
+	-논리적으로는 단어를 나누는게 더 가독성이 좋지 않나 싶지만 극명한 시간차이.. deque를
+		잘 이용하자.. 
+
+package backjun;
+
+import java.util.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
+import java.math.BigInteger;
+import java.io.IOException;
+
+public class Main {	
+	private static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	private static BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+
+	private static Deque<Character> deque = new ArrayDeque<>();
+	private static StringBuilder sb = new StringBuilder();
+	
+	public static void main(String[] args) throws IOException {
+		String str = inputData();
+		reverseThrowDeque(str);
+		bw.write(sb.toString());
+		
+		bw.flush();
+		bw.close();
+		br.close();
+	}
+	
+	public static String inputData() throws IOException {
+		String str = br.readLine();
+		return str;
+	}
+
+	public static void reverseThrowDeque(String str) {
+		str += " ";
+		boolean flag = true;
+		
+		for (int i = 0; i < str.length(); i++) {
+			if (str.charAt(i) == '<') {
+				if (!deque.isEmpty()) {
+					while (!deque.isEmpty()) {
+						sb.append(deque.pollLast());
+					}
+				}
+				
+				sb.append("<");
+				flag = false;
+			} else if (str.charAt(i) == '>') {
+				while (!deque.isEmpty()) {
+					sb.append(deque.pollFirst());
+				}
+				
+				sb.append(">");
+				flag = true;
+			} else if (str.charAt(i) == ' ') {
+				if (flag) {
+					while (!deque.isEmpty()) {
+						sb.append(deque.pollLast());
+					}
+				} else {
+					while (!deque.isEmpty()) {
+						sb.append(deque.pollFirst());
+					}
+				}
+				
+				sb.append(" ");	
+			} else {
+				deque.offerLast(str.charAt(i));
+			}
+		}
+	}
+}//class
+
+
+
+
+
+답(단어와 태그를 먼저 구분한뒤 스택만을 이용하여 출력하는 방식):
+	-처음 푼 방법, bunch가 있음. 단어와 태그를 구분한뒤 집어넣어야하니까.
+
+package backjun;
+
+import java.util.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
+import java.math.BigInteger;
+import java.io.IOException;
+
+public class Main {	
+	private static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	private static BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+
+	private static Deque<Character> deque = new ArrayDeque<>();
+	private static StringBuilder sb = new StringBuilder();
+	private static String[] bunch = new String[100000];
+	
+	public static void main(String[] args) throws IOException {
+		
+		String str = inputData();
+		int count = cutStr(str);
+		reverseThrowDeque(count);
+		bw.write(sb.toString());
+		
+		bw.flush();
+		bw.close();
+		br.close();
+	}
+	
+	public static String inputData() throws IOException {
+		String str = br.readLine();
+		return str;
+	}
+	
+	public static int cutStr(String str) {
+		int count = 0;
+		String tmp = "";
+
+		for (int i = 0; i < str.length(); i++) {
+			
+			char ch = str.charAt(i);
+			if (ch == '<') {
+				if (tmp.length() > 0) {
+					bunch[count] = tmp;
+					count++;
+					tmp = "";
+				}
+				
+				while (str.charAt(i) != '>') {
+					tmp += str.charAt(i);
+					i++;
+				}
+				tmp += str.charAt(i);
+				bunch[count] = tmp;
+				count++;
+				tmp = "";
+				continue;
+			}
+			
+			if (ch == ' ') {
+				bunch[count] = tmp;
+				count++;
+				tmp = "";
+				continue;
+			}
+			
+			if (i == str.length() - 1) {
+				tmp += str.charAt(i);
+				bunch[count] = tmp;
+				count++;
+				tmp = "";
+				continue;
+			}
+			tmp += str.charAt(i);
+		}
+		
+		return count;
+	}
+	
+	public static void reverseThrowDeque(int count) {
+		for (int i = 0; i < count; i++) {
+			String tmp = reverseWord(bunch[i]);
+			
+			if (tmp.charAt(0) == '<') {
+				if (sb.length() != 0 && sb.charAt(sb.length() - 1) != '>') {
+					sb.setLength(sb.length() - 1);					
+				}
+				sb.append(tmp);
+				continue;
+			}
+			
+			sb.append(tmp).append(' ');
+		}
+	}
+	
+	private static String reverseWord(String tmp) {
+		if (tmp.charAt(0) == '<') {
+			return tmp;
+		}
+		
+		int len = tmp.length();
+		for (int i = 0; i < len; i++) {
+			deque.offerLast(tmp.charAt(i));
+		}
+		
+		tmp = "";
+		for (int i = 0; i < len; i++) {
+			tmp += deque.pollLast();
+		}
+		
+		return tmp;
+	}
+	
+}//class
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+################################################################################################################
+예제10)알고리즘 기초 1 / 자료구조 1 (연습) / 쇠막대기
+
+https://www.acmicpc.net/problem/10799
+################################################################################################################
+
+
+답:
+
+
+
+package backjun;
+
+import java.util.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
+import java.math.BigInteger;
+import java.io.IOException;
+
+public class Main {	
+	private static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	private static BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+
+	private static Deque<Character> deque = new ArrayDeque<>();
+	private static Stack<Character> stack = new Stack<>();
+	private static StringBuilder sb = new StringBuilder();
+
+	private static int separationCount = 0;
+	private static int barCount = 0;
+	
+	public static void main(String[] args) throws IOException {
+		String str = inputData();
+		inputDeque(str);
+		calc();
+		lastCalcOfSeparationCount();
+
+		bw.write(String.valueOf(separationCount));
+		bw.flush();
+		bw.close();
+		br.close();
+	}
+
+	public static String inputData() throws IOException {
+		return br.readLine();
+	}
+	
+//	public static void getTotalCountOfBar() { barCount때매 필요없어진 함수
+//		int count = 0;
+//		
+//		while (!deque.isEmpty()) {
+//			int top = deque.pollFirst();
+//			
+//			if (top == '(' && top == deque.peekFirst()) {
+//				count++;
+//			}
+//		}
+//		
+//		separationCount = count;
+//	}
+	
+	public static void inputDeque(String str) {
+		for (int i = 0; i < str.length(); i++) {
+			deque.offerLast(str.charAt(i));
+		}
+	}
+	
+	public static void calc() {
+		int separationCount = 0;
+		
+		while (!deque.isEmpty()) {
+			char top = deque.pollFirst();
+			
+			if (top == '('
+					&& deque.peekFirst() == ')') { // 레이저인 경우
+				int laserCount = 0;
+				
+				deque.pollFirst();
+				laserCount++;
+				while ((top = deque.pollFirst()) == '(' 
+						&& deque.peekFirst() == ')') {
+					deque.pollFirst();
+					laserCount++;
+				}
+				
+				deque.offerFirst(top);
+				
+				checkSeparation(laserCount);
+				continue;
+			}
+			
+			{ // top == deque.peekFirst() 레이저가 아닌 경우				
+				if (top == '(') { // 쇠막대 하나가 시작된 경우
+					stack.push(top);
+					barCount++;
+					continue;
+				}
+
+				if (top == ')'){ // 쇠막대 하나가 끝난 경우
+					stack.pop();
+					continue;
+				}
+			}
+			
+		}
+	}
+	
+	private static void checkSeparation(int laserCount) {
+		int exposedCount = stack.size();
+		separationCount += exposedCount * laserCount;
+	}
+	
+	private static void lastCalcOfSeparationCount() {
+		separationCount += barCount;
+	}
+}//class
