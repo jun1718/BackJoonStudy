@@ -1,0 +1,487 @@
+22.01.11.21회차
+===============================================================================
+*알고리즘 기초 1 / 2
+===============================================================================
+
+
+
+
+
+################################################################################################################
+예제13)알고리즘 기초 1 / 자료구조 1 (참고) / 후위 표기식2
+
+https://www.acmicpc.net/problem/1935
+################################################################################################################
+
+
+답(내가 처음 푼 답, hashMap을 이용해서 문자와 해당하는 값을 대응시킴):
+	-배열보다 hashMap이 조금 더 빠름
+	-128ms
+
+
+package backjun;
+
+import java.util.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
+import java.math.BigInteger;
+import java.io.IOException;
+
+public class Main {	
+	public static void main(String[] args) throws IOException {
+		Solve solve = new Solve();
+		solve.run();
+	}
+}//class
+
+class Solve {	
+	private BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	private BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+	private String str;
+	private HashMap<Character, Integer> hm = new HashMap<>();
+//	private Stack<Double> intStack = new Stack<>();
+	private Stack<Double> doubleStack = new Stack<>();
+	private int N;
+	
+	public void run() throws IOException {
+		input();
+		calc();
+		printData();
+	}
+	
+	private void input() throws IOException {	
+		this.N = Integer.parseInt(br.readLine());
+		this.str = br.readLine();
+		
+		for (int i = 0, count = 0; i < str.length(); i++) {
+			if (count == N) {
+				break;
+			}
+			
+			if (str.charAt(i) < 65 || str.charAt(i) > 90) {
+				continue;
+			}
+			
+			if (hm.containsKey(str.charAt(i))) {
+				continue;
+			}
+			
+			hm.put(str.charAt(i), Integer.parseInt(br.readLine()));
+			count++;
+		}
+	}
+	
+	private void calc() {
+		for (int i = 0; i < str.length(); i++) {
+			char ch = str.charAt(i);
+			
+			if (ch >= 65 && ch <= 90) {	
+				doubleStack.push((double) hm.get(ch));
+				continue;
+			}
+			
+			operateStack(ch);
+		}
+	}
+	
+	private void operateStack(char ch) {
+		if (ch == '+') {
+			double tmp = doubleStack.pop() + doubleStack.pop();
+			doubleStack.push(tmp);
+			return;
+		}
+		if (ch == '-') {
+			double o2 = doubleStack.pop();
+			double o1 = doubleStack.pop();
+			double tmp = o1 - o2;
+			doubleStack.push(tmp);
+			return;
+		}
+		if (ch == '*') {
+			double tmp = doubleStack.pop() * doubleStack.pop();
+			doubleStack.push(tmp);
+			return;
+		}
+		if (ch == '/') {
+			double o2 = doubleStack.pop();
+			double o1 = doubleStack.pop();
+			double tmp =  o1 / o2;
+			doubleStack.push(tmp);
+			return;
+		}
+		{ // ch == '%'
+			double o2 = doubleStack.pop();
+			double o1 = doubleStack.pop();
+			double tmp =  o1 % o2;
+			doubleStack.push(tmp);
+		}
+	}
+	
+	private void printData() throws IOException {
+		String result = String.format("%.2f", doubleStack.get(0));
+		bw.write(result);
+		bw.flush();
+		bw.close();
+		br.close();
+	}
+}
+
+
+
+답(다른사람거 참고, 배열을 이용하여 문자와 해당하는 값을 대응시킴):
+	-140ms
+
+
+package backjun;
+
+import java.util.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
+import java.math.BigInteger;
+import java.io.IOException;
+
+public class Main {	
+	public static void main(String[] args) throws IOException {
+		Solve solve = new Solve();
+		solve.run();
+	}
+}//class
+
+class Solve {	
+	private BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	private BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+	private String str;
+//	private HashMap<Character, Integer> hm = new HashMap<>();
+//	private Stack<Double> intStack = new Stack<>();
+	private Stack<Double> doubleStack = new Stack<>();
+	private int N;
+	private double[] arr;
+	
+	public void run() throws IOException {
+		input();
+		calc();
+		printData();
+	}
+	
+	private void input() throws IOException {	
+		this.N = Integer.parseInt(br.readLine());
+		this.str = br.readLine();
+		arr = new double[N];
+		
+		for (int i = 0, count = 0; i < str.length(); i++) {
+			if (count == N) {
+				break;
+			}
+			
+			if (str.charAt(i) < 65 || str.charAt(i) > 90) {
+				continue;
+			}
+			
+			
+//			if (hm.containsKey(str.charAt(i))) {
+//				continue;
+//			}
+			
+			arr[count] = Integer.parseInt(br.readLine()); 
+//			hm.put(str.charAt(i), Integer.parseInt(br.readLine()));
+			count++;
+		}
+	}
+	
+	private void calc() {
+		for (int i = 0; i < str.length(); i++) {
+			char ch = str.charAt(i);
+			
+			if (ch >= 65 && ch <= 90) {	
+				doubleStack.push(arr[ch - 'A']);
+				continue;
+			}
+			
+			operateStack(ch);
+		}
+	}
+	
+	private void operateStack(char ch) {
+		if (ch == '+') {
+			double tmp = doubleStack.pop() + doubleStack.pop();
+			doubleStack.push(tmp);
+			return;
+		}
+		if (ch == '-') {
+			double o2 = doubleStack.pop();
+			double o1 = doubleStack.pop();
+			double tmp = o1 - o2;
+			doubleStack.push(tmp);
+			return;
+		}
+		if (ch == '*') {
+			double tmp = doubleStack.pop() * doubleStack.pop();
+			doubleStack.push(tmp);
+			return;
+		}
+		if (ch == '/') {
+			double o2 = doubleStack.pop();
+			double o1 = doubleStack.pop();
+			double tmp =  o1 / o2;
+			doubleStack.push(tmp);
+			return;
+		}
+		{ // ch == '%'
+			double o2 = doubleStack.pop();
+			double o1 = doubleStack.pop();
+			double tmp =  o1 % o2;
+			doubleStack.push(tmp);
+		}
+	}
+	
+	private void printData() throws IOException {
+		String result = String.format("%.2f", doubleStack.get(0));
+		bw.write(result);
+		bw.flush();
+		bw.close();
+		br.close();
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+################################################################################################################
+예제14)알고리즘 기초 1 / 자료구조 1 (참고) / 후위 표기식
+
+// A + B * C + D
+//ABC*+D+
+//A + B * (C + D) 
+//ABCD+*+
+//A+B*C-(D+E)
+//ABC*+DE+-
+//A+B*(C+D)+(E+F)
+//ABCD+EF++*+
+//연속된 괄호
+
+
+https://www.acmicpc.net/problem/1918
+################################################################################################################
+
+
+답:
+
+
+package backjun;
+
+import java.util.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
+import java.math.BigInteger;
+import java.io.IOException;
+
+public class Main {	
+	public static void main(String[] args) throws IOException {
+		Solve solve = new Solve();
+		solve.run();
+	}
+}//class
+
+class Solve {	
+	private BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	private BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+
+	private String str;
+	private StringBuilder sb = new StringBuilder();
+	private Stack<Character> stack = new Stack<>();
+	
+	public void run() throws IOException {
+		input();
+		calc();
+		printData();
+	}
+	
+	private void input() throws IOException {
+		str = br.readLine();
+	}
+	
+	private void calc() {
+		for (int i = 0; i < str.length(); i++) {
+			char ch = str.charAt(i);
+			
+			if (ch >= 65 && ch <= 90) {
+				sb.append(ch);
+				continue;
+			}
+			
+			if (ch == ')') {
+				while (!stack.isEmpty() && stack.peek() != '(') {
+					sb.append(stack.pop());
+				}
+				stack.pop();
+				continue;
+			}	
+			//A + B * C * D
+			//ABC*D*+
+			{ // ch == (, -, +, *, /인 경우
+				while (!stack.isEmpty() && getPriorityScore(ch) != 0 
+						&& getPriorityScore(stack.peek()) >= getPriorityScore(ch)) {
+					sb.append(stack.pop());
+				}
+				stack.push(ch);
+			}
+			
+		}
+		
+		while (!stack.isEmpty()) {
+			sb.append(stack.pop());
+		}
+	}
+	
+	private int getPriorityScore(char ch) {
+		if (ch == '(') {
+			return 0;
+		}
+		
+		if (ch == '+' || ch == '-') {
+			return 1;
+		}
+		
+		{ // ch == '*' || ch == '/' 의 경우임, ch == ')'인 경우는 해당 메소드로 안들어옴 
+			return 2;			
+		}
+	}
+	
+	private void printData() throws IOException {
+		bw.write(sb.toString());
+		bw.flush();
+		bw.close();
+		br.close();
+	}
+}
+
+
+
+
+
+
+실패한 코드(해당코드는 틀린 코드임):
+
+package backjun;
+
+import java.util.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
+import java.math.BigInteger;
+import java.io.IOException;
+
+public class Main {	
+	public static void main(String[] args) throws IOException {
+		Solve solve = new Solve();
+		solve.run();
+	}
+}//class
+// A + B * C + D
+//ABC*+D+
+//A + B * (C + D) 
+//ABCD+*+
+//A+B*C-(D+E)
+//ABC*+DE+-
+//A+B*(C+D)+(E+F)
+//ABCD+EF++*+
+class Solve {	
+	private BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	private BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+
+	private Queue<Character> wordQue = new LinkedList<>();
+	private Stack<Character> operatorStack = new Stack<>();
+	private String str;
+	private StringBuilder sb = new StringBuilder();
+	
+	public void run() throws IOException {
+		input();
+		calc();
+		appendData();
+		printData(); 
+	}
+	
+	private void input() throws IOException {	
+		str = br.readLine();
+	}
+	
+	private void calc() {
+		for (int i = 0; i < str.length(); i++) {
+			char ch = str.charAt(i);
+			
+			if (ch >= 65 && ch <= 90) {
+				runWordStack(ch);
+				continue;
+			}
+			
+			if (!operatorStack.isEmpty() && (operatorStack.peek() == '*' 
+					|| operatorStack.peek() == '/')) {
+				if (ch == '+' || ch == '-') {
+					appendData();
+					i--;
+					continue;
+				}
+			}
+			
+			
+			
+			runOperatorStack(ch);
+		}
+	}
+	
+	private void runWordStack(char ch) {
+		wordQue.offer(ch);
+	}
+	
+	private void runOperatorStack(char ch) {
+		operatorStack.push(ch);
+	}
+	
+	private void appendData() {
+		while (!wordQue.isEmpty()) {
+			sb.append(wordQue.poll());			
+		}
+		while (!operatorStack.isEmpty()) {
+			if (operatorStack.peek() == ')' 
+					|| operatorStack.peek() == '(') {
+				operatorStack.pop();
+			}
+			sb.append(operatorStack.pop());			
+		}
+	}
+	
+	private void printData() throws IOException {
+		bw.write(sb.toString());
+		bw.flush();
+		bw.close();
+		br.close();
+	}
+}
