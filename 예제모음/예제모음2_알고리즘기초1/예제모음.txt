@@ -3019,3 +3019,946 @@ class Solve {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+21.01.13.22회차
+===============================================================================
+*알고리즘 기초 1 / 2
+===============================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+################################################################################################################
+예제15)알고리즘 기초 1 / 자료구조 1 (참고) / 알파벳 개수
+
+https://www.acmicpc.net/problem/10808
+################################################################################################################
+
+
+답:
+
+
+
+
+package backjun;
+
+import java.util.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
+import java.math.BigInteger;
+import java.io.IOException;
+
+public class Main {	
+	public static void main(String[] args) throws IOException {
+		Solve solve = new Solve();
+		solve.run();
+	}
+}//class
+
+class Solve {	
+	private BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	private BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+	private String str;
+	private int N;
+	private int[] arr = new int[26];
+	private StringBuilder sb = new StringBuilder();
+	
+	public void run() throws IOException{
+		input();
+		calc();
+		printData();
+	}
+	
+	private void input() throws IOException {
+		str = br.readLine();
+		N = str.length();
+	}
+	
+	private void calc() {
+		for (int i = 0; i < N; i++) {
+			arr[str.charAt(i) - 'a']++;
+		}
+	}
+	
+	private void printData() throws IOException {
+		for (int i = 0; i < 26; i++) {
+			sb.append(arr[i] + " ");
+		}
+		
+		bw.write(sb.toString());
+		bw.flush();
+		bw.close();
+		br.close();
+	}
+}	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+################################################################################################################
+예제16)알고리즘 기초 1 / 자료구조 1 (참고) / 알파벳 찾기
+
+https://www.acmicpc.net/problem/10809
+################################################################################################################
+
+
+답:
+
+
+
+
+
+package backjun;
+
+import java.util.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
+import java.math.BigInteger;
+import java.io.IOException;
+
+public class Main {	
+	public static void main(String[] args) throws IOException {
+		Solve solve = new Solve();
+		solve.run();
+	}
+}//class
+
+class Solve {	
+	private BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	private BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+	private String str;
+	private int N;
+	private int[] arr = new int[26];
+	private StringBuilder sb = new StringBuilder();
+	
+	public void run() throws IOException{
+		input();
+		calc();
+		printData();
+	}
+	
+	private void input() throws IOException {
+		str = br.readLine();
+		N = str.length();
+		Arrays.fill(arr, -1);
+	}
+	
+	private void calc() {
+		for (int i = 0; i < N; i++) {
+			if (arr[str.charAt(i) - 'a'] != -1) {
+				continue;
+			}
+			arr[str.charAt(i) - 'a'] = i;
+		}
+	}
+	
+	private void printData() throws IOException {
+		for (int i = 0; i < 26; i++) {
+			sb.append(arr[i] + " ");
+		}
+		
+		bw.write(sb.toString());
+		bw.flush();
+		bw.close();
+		br.close();
+	}
+}	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+################################################################################################################
+예제17)알고리즘 기초 1 / 자료구조 1 (참고) / 문자열 분석
+
+https://www.acmicpc.net/problem/10820
+################################################################################################################
+
+
+답:
+
+
+
+
+package backjun;
+
+import java.util.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
+import java.math.BigInteger;
+import java.io.IOException;
+
+public class Main {	
+	public static void main(String[] args) throws IOException {
+		Solve solve = new Solve();
+		solve.run();
+	}
+}//class
+
+class Solve {
+	private BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	private BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+	
+	private String str;
+	private Queue<Node> que = new LinkedList<>();
+	
+	public void run() throws IOException{
+		str = "";
+		while ((str = br.readLine()) != null) {
+			printData(str);			
+		}
+		
+		bw.close();
+		br.close();
+	}
+	
+	private void printData(String nodeStr) throws IOException {
+		Node node = new Node();
+		node.printData(nodeStr, bw);
+	}
+}
+
+class Node {
+	private StringBuilder sb = new StringBuilder();
+	
+	private static final int SMALL = 1;
+	private static final int BIG = 2;
+	private static final int NUM = 3;
+	private static final int SPACE = 4;
+	
+	private int smallCount = 0;
+	private int bigCount = 0;
+	private int numCount = 0;
+	private int spaceCount = 0;
+	
+	public Node() {
+		super();
+	}
+	private Node(int small, int big, int num, int space) {
+		this.smallCount = small;
+		this.bigCount = big;
+		this.numCount = num;
+		this.spaceCount = space;
+	}
+	
+	public void printData(String nodeStr, BufferedWriter bw) throws IOException {
+		setData(nodeStr);
+		appendData();
+		writeData(bw);
+	}
+	
+	private void setData(String nodeStr) {
+		for (int i = 0; i < nodeStr.length(); i++) {
+			int result = check(nodeStr.charAt(i));
+			
+			if (result == BIG) {
+				this.bigCount++;
+				continue;
+			}
+			
+			if (result == SMALL) {
+				this.smallCount++;
+				continue;
+			}
+			
+			if (result == NUM) {
+				this.numCount++;
+				continue;
+			}
+			
+			{ // result == SPACE
+				this.spaceCount++;
+			}
+		}
+	}
+	
+	private int check(char ch) {
+		if (ch >= 65 && ch <= 90) {
+			return BIG;
+		}
+		
+		if (ch >= 97 && ch <= 122) {
+			return SMALL;
+		}
+		
+		if (ch >= 48 && ch <= 57) {
+			return NUM;
+		}
+		
+		{ // ch == ' ' 
+			return SPACE;
+		}
+	}
+	
+	private void appendData() {
+		sb.append(smallCount + " " + bigCount + " "
+				+ numCount + " " + spaceCount + "\n");
+	}
+	
+	private void writeData(BufferedWriter bw) throws IOException {
+		bw.write(sb.toString());
+		bw.flush();
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+################################################################################################################
+예제18)알고리즘 기초 1 / 자료구조 1 (참고) / 단어 길이 재기
+
+이문제는 무슨 의미가 있는지 잘 모르겠다.
+
+https://www.acmicpc.net/problem/2743
+################################################################################################################
+
+
+답:
+
+
+
+package backjun;
+
+import java.util.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
+import java.math.BigInteger;
+import java.io.IOException;
+
+public class Main {	
+	public static void main(String[] args) throws IOException {
+		Solve solve = new Solve();
+		solve.run();
+	}
+}//class
+
+class Solve {
+	private BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	private BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+	
+	public void run() throws IOException {
+		String str = br.readLine();
+		System.out.println(str.length());
+	}
+
+}
+
+
+
+
+
+
+
+
+
+################################################################################################################
+예제19)알고리즘 기초 1 / 자료구조 1 (참고) / ROT13(카이사르암호)
+
+*답에는 자료구조측면에서 푸는법 1가지와 수학적측면에서 푸는법 2가지가 있다.
+	-수학적측면 방식 2개 차이
+		-26개로 되어있으니 주기가 13씩 갔을때 두번가면 다시 처음으로 돌아온다는 것을 이용하여
+			간편하게 식 도출
+		-직접적으로 넘어간것을 가져와서 맞추는 식으로 식 도출
+
+https://www.acmicpc.net/problem/11655
+################################################################################################################
+
+
+답(내가 자료구조 측면에서 푼 코드):
+
+package backjun;
+
+import java.util.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
+import java.math.BigInteger;
+import java.io.IOException;
+
+public class Main {	// 수학적으로 풀지 않고 자료구조 측면에서 푼 답
+	public static void main(String[] args) throws IOException {
+		Solve solve = new Solve();
+		solve.run();
+	}
+}//class
+
+class Solve {
+	private BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	private BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+	private String str;
+	private char[] arr; 
+	
+	public void run() throws IOException {
+		input();
+		calc();
+		printData();
+	}
+
+	private void input() throws IOException {
+		str = br.readLine();
+		arr = str.toCharArray();
+	}
+	
+	private void calc() {
+		for (int i = 0; i < str.length(); i++) {
+			char ch = str.charAt(i);
+			if (!(ch >= 65 && ch <= 90)
+					&& !(ch >= 97 && ch <= 122)) {
+				continue;
+			}
+			
+			operateQue(ch, i);
+		}
+	}
+	
+	private void operateQue(char ch, int i) {
+		Queue<Integer> que = new LinkedList<>();
+		setQue(que); // 대소문자 a~z 입력과정
+		
+		if (ch >= 65 && ch <= 90) {
+			fixQue(que, ch, 'A');
+			arr[i] = (char) (que.peek() + 'A');
+			que.clear();
+			return; 
+		}
+		
+		fixQue(que, ch, 'a');
+		arr[i] = (char) (que.peek() + 'a');
+		que.clear();
+	}
+		
+	private void setQue(Queue<Integer> que) {
+		for (int i = 0; i < 26; i++) {
+			que.offer(i);
+		}
+	}
+	
+	private void fixQue(Queue<Integer> que, char ch, char first) {
+		while (que.peek() != ch - first) {
+			que.offer(que.poll());
+		}			
+		
+		for (int i = 0; i < 13; i++) {
+			que.poll();
+		}
+	}
+	
+	private void printData() throws IOException {
+		str = String.copyValueOf(arr);
+		writeData(str);
+	}
+	
+	private void writeData(String str) throws IOException {
+		bw.write(str);
+		bw.flush();
+		bw.close();
+		br.close();
+	}
+}
+
+
+
+
+
+
+
+
+답(내가 수학적으로 푼 코드):
+
+
+package backjun;
+
+import java.util.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
+import java.math.BigInteger;
+import java.io.IOException;
+
+public class Main {	
+	public static void main(String[] args) throws IOException {
+		Solve solve = new Solve();
+		solve.run();
+	}
+}//class
+
+class Solve {
+	private BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	private BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+	private String str;
+	private char[] copyStr;
+	
+	public void run() throws IOException {
+		input();
+		calc();
+		printData();
+	}
+
+	private void input() throws IOException {
+		str = br.readLine();
+		copyStr = str.toCharArray();
+	}
+	
+	private void calc() {
+		for (int i = 0; i < str.length(); i++) {
+			char ch = str.charAt(i);
+			if (!(ch >= 65 && ch <= 90)   
+					&& !(ch >= 97 && ch <= 122)) {
+				continue;
+			}
+			
+			if ((ch >= 65 && ch <= 90)
+					&& copyStr[i] + 13 > 90) { // 대문자 범위를 넘어서는 경우
+				copyStr[i] = (char) (((copyStr[i] + 13) - 90) + 64);
+				continue;
+			}
+			
+			if ((ch >= 97 && ch <= 122)
+					&& copyStr[i] + 13 > 122) { // 소문자 범위를 넘어서는 경우 
+				copyStr[i] = (char) (((copyStr[i] + 13) - 122) + 96);
+				continue;
+			}
+			
+			
+			{ // 더해도 대문자 및 소문자 범위를 넘어서지 않는 경우				
+				copyStr[i] += 13;
+			}
+		}
+	}
+	
+	private void printData() throws IOException {
+		str = String.copyValueOf(copyStr);
+		writeData();
+	}
+	
+	private void writeData() throws IOException {
+		bw.write(str);
+		bw.flush();
+		bw.close();
+		br.close();
+	}
+}
+
+
+
+
+
+
+
+답(타인이 수학적으로 푼 답을 응용한 코드):
+
+
+package backjun;
+
+import java.util.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
+import java.math.BigInteger;
+import java.io.IOException;
+
+public class Main {	
+	public static void main(String[] args) throws IOException {
+		Solve solve = new Solve();
+		solve.run();
+	}
+}//class
+
+class Solve {
+	private BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	private BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+	private String str;
+	private char[] copyStr;
+	
+	public void run() throws IOException {
+		input();
+		calc();
+		printData();
+	}
+
+	private void input() throws IOException {
+		str = br.readLine();
+		copyStr = str.toCharArray();
+	}
+	
+	private void calc() {
+		for (int i = 0; i < str.length(); i++) {
+			char ch = str.charAt(i);
+			if (!(ch >= 65 && ch <= 90)   
+					&& !(ch >= 97 && ch <= 122)) {
+				continue;
+			}
+			
+			if ((ch >= 'N' && ch <= 'Z') 
+			 		|| (ch >= 'n' && ch <= 'z')){ // 더했을 때 대문자 또는 소문자 범위를 넘어서는 경우
+				copyStr[i] -= 13;
+				continue;
+			}
+			
+			{ // 더해도 대문자 또는 소문자 범위를 넘어서지 않는 경우				
+			  // (ch >= 'A' && ch <= 'M') || (ch >= 'a' && ch <= 'm') 
+				copyStr[i] += 13;
+			}
+		}
+	}
+	
+	private void printData() throws IOException {
+		str = String.copyValueOf(copyStr);
+		writeData();
+	}
+	
+	private void writeData() throws IOException {
+		bw.write(str);
+		bw.flush();
+		bw.close();
+		br.close();
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+################################################################################################################
+예제20)알고리즘 기초 1 / 자료구조 1 (참고) / 네 수
+
+
+https://www.acmicpc.net/problem/10824
+################################################################################################################
+
+
+답:
+
+
+
+
+
+package backjun;
+
+import java.util.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
+import java.math.BigInteger;
+import java.io.IOException;
+
+public class Main {	
+	public static void main(String[] args) throws IOException {
+		Solve solve = new Solve();
+		solve.run();
+	}
+}//class
+
+class Solve {
+	private BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	private BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+	private String str1;
+	private String str2;
+	
+	public void run() throws IOException {
+		input();
+		long result = calc();
+		printData(result);
+	}
+
+	private void input() throws IOException {
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		str1 = st.nextToken();
+		str1 += st.nextToken();
+		str2 = st.nextToken();
+		str2 += st.nextToken();
+	}
+	
+	private long calc() {
+		long num1 = Long.parseLong(str1);
+		long num2 = Long.parseLong(str2);
+		
+		return num1 + num2;
+	}
+	
+	private void printData(long result) throws IOException {
+		bw.write(String.valueOf(result));
+		bw.flush();
+		bw.close();
+		br.close();
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+################################################################################################################
+예제21)알고리즘 기초 1 / 자료구조 1 (참고) / 접미사 배열
+
+
+https://www.acmicpc.net/problem/11656
+################################################################################################################
+
+
+답:
+
+
+package backjun;
+
+import java.util.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
+import java.math.BigInteger;
+import java.io.IOException;
+
+public class Main {	
+	public static void main(String[] args) throws IOException {
+		Solve solve = new Solve();
+		solve.run();
+	}
+}//class
+
+class Solve {
+	private BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	private BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+	private String str;
+	private String[] strArr;
+	private StringBuilder sb = new StringBuilder();
+	
+	public void run() throws IOException {
+		input();
+		calc();
+		printData();
+	}
+
+	private void input() throws IOException {
+		str = br.readLine();
+		strArr = new String[str.length()];
+	}
+	
+	private void calc() {
+		makeSub(); // 접미사를 만드는 함수
+		Arrays.sort(strArr);
+	}
+	
+	private void makeSub() {
+		for (int i = 0; i < str.length(); i++) {
+			strArr[i] = str.substring(i);
+		}		
+	}
+
+	private void printData() throws IOException {
+		for (int i = 0; i < strArr.length; i++) {
+			sb.append(strArr[i] + "\n");
+		}
+		writeData();
+	}
+	
+	private void writeData() throws IOException {
+		bw.write(sb.toString());			
+		bw.flush();
+		bw.close();
+		br.close();
+	}
+}
