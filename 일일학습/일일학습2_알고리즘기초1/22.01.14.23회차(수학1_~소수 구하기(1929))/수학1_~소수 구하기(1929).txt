@@ -1,0 +1,831 @@
+21.01.14.23회차
+===============================================================================
+*알고리즘 기초 1 / 2
+===============================================================================
+
+
+
+
+
+################################################################################################################
+예제22)알고리즘 기초 1 / 수학 1 / 나머지
+
+https://www.acmicpc.net/problem/10430
+################################################################################################################
+
+
+답:
+
+
+
+
+package backjun;
+
+import java.util.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
+import java.math.BigInteger;
+import java.io.IOException;
+
+public class Main {	
+	public static void main(String[] args) throws IOException {
+		Solve solve = new Solve();
+		solve.run();
+	}
+}//class
+
+class Solve {
+	private BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	private BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+	private int[] arr = new int[3];
+	
+	public void run() throws IOException {
+		input();
+		calc();
+//		printData();
+	}
+	
+	private void input() throws IOException {
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		for (int i = 0; i < 3; i++) {
+			arr[i] = Integer.parseInt(st.nextToken());
+		}
+	}
+	
+	private void calc() {
+		System.out.println((arr[0] + arr[1]) % arr[2]);
+		System.out.println(((arr[0] % arr[2]) + (arr[1] % arr[2])) % arr[2]);
+		System.out.println((arr[0] * arr[1]) % arr[2]);
+		System.out.println(((arr[0] % arr[2]) * (arr[1] % arr[2])) % arr[2]);
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+################################################################################################################
+예제23)알고리즘 기초 1 / 수학 1 / 최대공약수와 최소공배수
+
+*답이 4개다.
+
+https://www.acmicpc.net/problem/2609
+################################################################################################################
+
+
+답(바로 아랫답을 풀고나서 다른사람 풀이 구글링한후 더 쉬운 유클리드호제법 재귀가 있어서 내거에 맞춤
+	, 결국 같은 논리인데 생각이 짧았음):
+	-128ms
+		-원래코드가 조금 빠르긴하지만 재귀쓰는거 자체가 가독성때매 쓰니까 해당 코드를 쓰는게 좋을듯
+
+package backjun;
+
+import java.util.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
+import java.math.BigInteger;
+import java.io.IOException;
+
+public class Main {	
+	public static void main(String[] args) throws IOException {
+		Solve solve = new Solve();
+		solve.run();
+	}
+}//class
+
+class Solve {
+	private BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	private BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+	private int A;
+	private int B;
+	private int gcdResult;
+	private int lcmResult;
+	
+	public void run() throws IOException {
+		input();
+		calc();
+		printData();
+	}
+	
+	private void input() throws IOException {
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		
+		A = Integer.parseInt(st.nextToken());
+		B = Integer.parseInt(st.nextToken());
+	}
+	
+	private void calc() {
+		calcGcd(A, B);
+		calcLcm();
+	}
+	
+	private void calcGcd(int a, int b) {
+		if (b == 0) {
+			gcdResult = a;
+			return;
+		}
+		
+		int result = a % b;
+		calcGcd(b, result);
+	}
+	
+	private void calcLcm() {
+		int tmp1 = A / gcdResult;
+		int tmp2 = B / gcdResult;
+		
+		lcmResult = gcdResult * tmp1 * tmp2;
+	}
+	
+	private void printData() throws IOException {
+		bw.write("" + gcdResult);
+		bw.newLine();
+		bw.write("" + lcmResult);
+		
+		bw.flush();
+		bw.close();
+		br.close();
+	}
+}
+
+
+
+
+답(내가 처음 푼 재귀 답):
+	-124ms
+	-다른 답들보다 가장 빠르고 이건 규칙성을 알아야한다.
+
+package backjun;
+
+import java.util.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
+import java.math.BigInteger;
+import java.io.IOException;
+
+public class Main {	
+	public static void main(String[] args) throws IOException {
+		Solve solve = new Solve();
+		solve.run();
+	}
+}//class
+
+class Solve {
+	private BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	private BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+	private int A;
+	private int B;
+	private int gcdResult;
+	private int lcmResult;
+	
+	public void run() throws IOException {
+		input();
+		calc();
+		printData();
+	}
+	
+	private void input() throws IOException {
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		
+		A = Integer.parseInt(st.nextToken());
+		B = Integer.parseInt(st.nextToken());
+	}
+	
+	private void calc() {
+		calcGcd(A, B);
+		calcLcm();
+	}
+	
+	private void calcGcd(int a, int b) {
+		if (a / b == 0) {
+			calcGcd(b, a);
+			return;
+		}
+		
+		int result = a % b;
+		if (result == 0) {
+			gcdResult = b;
+			return;
+		}
+		
+		calcGcd(b, result);
+	}
+	
+	private void calcLcm() {
+		int tmp1 = A / gcdResult;
+		int tmp2 = B / gcdResult;
+		
+		lcmResult = gcdResult * tmp1 * tmp2;
+	}
+	
+	private void printData() throws IOException {
+		bw.write("" + gcdResult);
+		bw.newLine();
+		bw.write("" + lcmResult);
+		
+		bw.flush();
+		bw.close();
+		br.close();
+	}
+}
+
+
+
+
+
+답(cpp코드, 다른 사람이 작은 수의 약수중 큰값부터 찾아내려가면서 기존의 값에 나눠서 떨어지면 그값을 사용하는
+	방식):
+
+#include <iostream>
+using namespace std;
+main() {
+    int a, b, i;
+    cin >> a >> b;
+    if (a >= b) {
+        i = b;
+    }
+    else {
+        i = a;
+    }
+    while (i) {
+        if (a % i == 0 && b % i == 0) {
+            cout << i << '\n';
+            break;
+        }
+        else {
+            i--;
+        }
+    }
+    cout << a * b / i;
+}
+
+
+
+답(위 cpp코드를 자바로 바꾼것):
+	-128ms 확실히 아래 재귀보다 빠르다. 재귀라서 그런건지 약수를 찾아오는게 느린건지 모르겠다.
+package backjun;
+
+import java.util.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
+import java.math.BigInteger;
+import java.io.IOException;
+
+public class Main {	
+	public static void main(String[] args) throws IOException {
+		Solve solve = new Solve();
+		solve.run();
+	}
+}//class
+
+class Solve {
+	private BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	private BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+	private int a;
+	private int b;
+	
+	public void run() throws IOException {
+		input();
+		calc();
+//		printData();
+	}
+	
+	private void input() throws IOException {
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		
+		a = Integer.parseInt(st.nextToken());
+		b = Integer.parseInt(st.nextToken());
+	}
+	
+	private void calc() {
+		int i = 0;
+		
+		if (a >= b) {
+	        i = b;
+	    }
+	    else {
+	        i = a;
+	    }
+		
+	    while (i != 0) {
+	        if (a % i == 0 && b % i == 0) {
+	            System.out.println(i);
+	            break;
+	        }
+	        else {
+	            i--;
+	        }
+	    }
+	    
+	    System.out.println(i * (a / i) * (b / i));
+	}
+	
+	private void printData() throws IOException {
+
+	}
+}
+
+딥(위에 다른사람 답 보고 응용해서 재귀로 만든 답):
+	-위 다른사람답은 1식 계속 빼서 주는거고 내가 응용한건 약수를 뽑아서 약수만 주는거
+	-136ms
+
+
+package backjun;
+
+import java.util.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
+import java.math.BigInteger;
+import java.io.IOException;
+
+public class Main {	
+	public static void main(String[] args) throws IOException {
+		Solve solve = new Solve();
+		solve.run();
+	}
+}//class
+
+class Solve {
+	private BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	private BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+	private int A;
+	private int B;
+	private int gcdResult;
+	private int lcmResult;
+	private int divisor;
+	
+	public void run() throws IOException {
+		input();
+		calc();
+		printData();
+	}
+	
+	private void input() throws IOException {
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		
+		A = Integer.parseInt(st.nextToken());
+		B = Integer.parseInt(st.nextToken());
+	}
+	
+	private void calc() {
+		calcGcd();
+		calcLcm();
+	}
+	
+	private void calcGcd() { 
+		if (A > B) {
+			divisor = B;
+			calcGcd(A, divisor);
+		} else {
+			divisor = A;
+			calcGcd(B, divisor);
+		}
+	}
+	
+	private void calcGcd(int a, int b) {
+		int result = a % b;
+		if (result == 0) {
+			gcdResult = b;
+			return;
+		}
+	
+		calcGcd(a, getDivisor(b));
+	}
+	
+	private int getDivisor(int b) {
+		for (int i = --b; i >= 1; i--) {
+			if (divisor % i == 0) {
+				return i;
+			}
+		}
+		
+		return Integer.MAX_VALUE; // 출력되지 않을 수
+	}
+	
+	private void calcLcm() {
+		int tmp1 = A / gcdResult;
+		int tmp2 = B / gcdResult;
+		
+		lcmResult = gcdResult * tmp1 * tmp2;
+	}
+	
+	private void printData() throws IOException {
+		bw.write("" + gcdResult);
+		bw.newLine();
+		bw.write("" + lcmResult);
+		
+		bw.flush();
+		bw.close();
+		br.close();
+	}
+}
+
+
+
+
+
+답(두번째답에서 몫을 일일히 구해서 gcd와 곱해서 최소공배수를 구하는데 
+	그런 과정없이 가독성을 위해 gcd / a * b로 최소공배수를 구한 방법임):
+	-128ms 몫을 구해서 바로 곱하는 것보다 좀 느린듯 하다
+		a,b의 값이 커질수록 큰수의 연산이 일어나서 그런듯하다.
+		두번째답 속도 : 124ms
+
+package backjun;
+
+import java.util.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
+import java.math.BigInteger;
+import java.io.IOException;
+
+public class Main {	
+	public static void main(String[] args) throws IOException {
+		Solve solve = new Solve();
+		solve.run();
+	}
+}//class
+
+class Solve {
+	private BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	private BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+	private int A;
+	private int B;
+	private int gcdResult;
+	private int lcmResult;
+	
+	public void run() throws IOException {
+		input();
+		calc();
+		printData();
+	}
+	
+	private void input() throws IOException {
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		
+		A = Integer.parseInt(st.nextToken());
+		B = Integer.parseInt(st.nextToken());
+	}
+	
+	private void calc() {
+		calcGcd(A, B);
+		calcLcm();
+	}
+	
+	private void calcGcd(int a, int b) {
+		if (a / b == 0) {
+			calcGcd(b, a);
+			return;
+		}
+		
+		int result = a % b;
+		if (result == 0) {
+			gcdResult = b;
+			return;
+		}
+		
+		calcGcd(b, result);
+	}
+	
+	private void calcLcm() {
+		lcmResult = (A * B) / gcdResult;
+	}
+	
+	private void printData() throws IOException {
+		bw.write("" + gcdResult);
+		bw.newLine();
+		bw.write("" + lcmResult);
+		
+		bw.flush();
+		bw.close();
+		br.close();
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+################################################################################################################
+예제24)알고리즘 기초 1 / 수학 1 / 최소공배수
+
+
+https://www.acmicpc.net/problem/1934	
+################################################################################################################
+
+
+답:
+
+
+
+
+package backjun;
+
+import java.util.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
+import java.math.BigInteger;
+import java.io.IOException;
+
+public class Main {	
+	public static void main(String[] args) throws IOException {
+		Solve solve = new Solve();
+		solve.run();
+	}
+}//class
+
+class Solve {
+	private BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	private BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+	private int A;
+	private int B;
+	private int gcdResult;
+	private int lcmResult;
+	int N;
+	
+	public void run() throws IOException {
+		input();
+		
+		bw.close();
+		br.close();
+	}
+	
+	private void input() throws IOException {
+		N = Integer.parseInt(br.readLine());
+		for (int i = 0; i < N; i++) {
+			StringTokenizer st = new StringTokenizer(br.readLine());
+			A = Integer.parseInt(st.nextToken());
+			B = Integer.parseInt(st.nextToken());
+			calc();
+			printData();
+		}
+	}
+	
+	private void calc() {
+		calcGcd(A, B);
+		calcLcm();
+	}
+	
+	private void calcGcd(int a, int b) {
+		if (b == 0) {
+			gcdResult = a;
+			return;
+		}
+		
+		int result = a % b;
+		calcGcd(b, result);
+	}
+	
+	private void calcLcm() {
+		lcmResult = (A * B) / gcdResult;
+	}
+	
+	private void printData() throws IOException {
+		bw.write("" + lcmResult);
+		bw.newLine();
+		bw.flush();
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+################################################################################################################
+예제25)알고리즘 기초 1 / 수학 1 /
+
+*약수는 모두 대칭되기때문에 낮은수에서부터 나눴을때 0으로 나누어떨어지면 해당하는 몫도 약수이며
+	범위는 제곱근보다 작게하면된다.
+	-나누어떨어질때 몫도 모두 배열에 집어넣고 나중에 오름차순정렬하면 된다.
+
+*약수의 갯수가 짝수인지 홀수인지 파악하려면 제시된 수가 완전제곱수인지 아닌지 파악하면된다.
+	-완전제곱수라면 기준점이 약수로 있는것이니 그 좌우에 대칭점들이 있으므로 홀수이고
+		완전제곱수가 아니라면 기준점이 약수로 없는것이니 좌우 대칭점이 짝수개임으로 짝수
+
+*그럼 소수는 약수의 갯수가 2개인 수니까 특정수의 제곱근 이하에 모든 약수의 대칭수가있으니 그중에 하나라도 나오면
+	소수가 아닌것으로 판별하면 된다.
+
+https://www.acmicpc.net/problem/
+################################################################################################################
+
+
+답:
+
+
+
+
+
+package backjun;
+
+import java.util.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
+import java.math.BigInteger;
+import java.io.IOException;
+
+public class Main {	
+	public static void main(String[] args) throws IOException {
+		Solve solve = new Solve();
+		solve.run();
+	}
+}//class
+
+class Solve {
+	private BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	private BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+	int N;
+	int[] arr;
+	int count = 0;
+	
+	public void run() throws IOException {
+		input();
+		calc();
+		printData();
+	}
+
+	private void input() throws IOException {
+		N = Integer.parseInt(br.readLine());
+		arr = new int[N];
+		
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		for (int i = 0; i < N; i++) {
+			arr[i] = Integer.parseInt(st.nextToken());
+		}
+	}
+	
+	private void calc() {
+		for (int i = 0; i < N; i++) {
+			if (isPrime(i)) {
+				count++;
+			}
+		}
+	}
+	
+	private boolean isPrime(int i) {
+		if (arr[i] == 1) {
+			return false;
+		}
+		
+		for (int j = 2; j <= Math.sqrt(arr[i]); j++) {
+			if (arr[i] % j == 0) {
+				return false;
+			}
+		}
+		
+		return true;
+	}
+	
+	private void printData() throws IOException {
+		bw.write(String.valueOf(count));
+		bw.flush();
+		bw.close();
+		br.close();
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+################################################################################################################
+예제26)알고리즘 기초 1 / 수학 1 / 소수 구하기
+
+https://www.acmicpc.net/problem/1929
+################################################################################################################
+
+
+답:
+
+
+
+package backjun;
+
+import java.util.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
+import java.math.BigInteger;
+import java.io.IOException;
+
+public class Main {	
+	public static void main(String[] args) throws IOException {
+		Solve solve = new Solve();
+		solve.run();
+	}
+}//class
+
+class Solve {
+	private BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	private BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+	int[] arr = new int[2];
+	int count = 0;
+	StringBuilder sb = new StringBuilder();
+	
+	public void run() throws IOException {
+		input();
+		calc();
+		printData();
+	}
+
+	private void input() throws IOException {
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		for (int i = 0; i < 2; i++) {
+			arr[i] = Integer.parseInt(st.nextToken());
+		}
+	}
+	
+	private void calc() {
+		for (int i = arr[0]; i <= arr[1]; i++) {
+			if (isPrime(i)) {
+				sb.append(i + "\n");
+			}
+		}
+	}
+	
+	private boolean isPrime(int i) {
+		if (i == 1) {
+			return false;
+		}
+		
+		for (int j = 2; j <= Math.sqrt(i); j++) {
+			if (i % j == 0) {
+				return false;
+			}
+		}
+		
+		return true;
+	}
+	
+	private void printData() throws IOException {
+		bw.write(sb.toString());
+		bw.flush();
+		bw.close();
+		br.close();
+	}
+}
+
+
+
