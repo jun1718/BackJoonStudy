@@ -1,0 +1,872 @@
+21.01.15.24회차
+===============================================================================
+*알고리즘 기초 1 / 2
+===============================================================================
+
+
+
+
+
+################################################################################################################
+예제26)알고리즘 기초 1 / 수학 1 / 소수 구하기 (답추가)
+
+https://www.acmicpc.net/problem/1929
+################################################################################################################
+
+
+
+
+답(에라토네스의 체 개념을 적용시켜서 푼 답):
+	-284ms
+package backjun;
+
+import java.util.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
+import java.math.BigInteger;
+import java.io.IOException;
+
+public class Main {	
+	public static void main(String[] args) throws IOException {
+		Solve solve = new Solve();
+		solve.run();
+	}
+}//class
+
+class Solve {
+	private BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	private BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+	private boolean[] sieve; // true인 원소는 소수가 아니고, false인 원소는 소수임
+	private int[] arr = new int[2];
+	
+	int count = 0;
+	StringBuilder sb = new StringBuilder();
+	
+	public void run() throws IOException {
+		input();
+		calc();
+		printData();
+	}
+
+	private void input() throws IOException {
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		for (int i = 0; i < 2; i++) {
+			arr[i] = Integer.parseInt(st.nextToken());
+		}
+		
+		sieve = new boolean[arr[1] + 1];
+		sieve[0] = true; // 0, 1은 소수가 아니니 미리 체크 물론 0은 안해도 상관없긴함. 찾을 일이 없어서
+		sieve[1] = true;
+	}
+	
+	private void calc() {
+		operateSieve(); // 에라토네스의 체를 범위에 맞게 적용시켜 소수인지 아닌지 판별하는 함수
+	}
+	
+	private void operateSieve() {		
+		for (int i = 2; i * i <= arr[1]; i++) { // i * i 앞에 long을 지워도 된다.
+		// 이전 i <= arr[1] 이었던 식이면 arr[1]이 100만이라할때 아래 if에서
+		// 100만 * 100만까지 나올수 있기에 아래 if에서 long을 해주어야했지만 (21억넘으니까)
+		// 애초에 for 제한에서 i*i <= 백만 이면 i*i를 아무리 해봐야 아래 if에서 21익을 넘을리가 없다.
+		// 백만보다 조금 더 높은 수가 나올수도 있겠지만 위의 제한식에서 막힌다.
+			if (sieve[i] == false && i * i <= arr[1]) {
+				operateSieve(i);
+			}
+		}
+	}
+	
+	private void operateSieve(int i) {
+		for (int j = i * i; j <= arr[1]; j += i) {
+			sieve[j] = true;
+		}
+	}
+	
+	private void printData() throws IOException {
+		findPrime();
+		bw.write(sb.toString());
+		bw.flush();
+		bw.close();
+		br.close();
+	}
+	
+	private void findPrime() {
+		for (int i = arr[0]; i <= arr[1]; i++) {
+			if (!sieve[i]) {
+				sb.append(i + "\n");
+			}
+		}
+	}
+}
+
+
+
+
+
+
+
+
+
+
+답(약수의 개수로 소수를 찾아낸 답):
+	-532ms
+
+
+package backjun;
+
+import java.util.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
+import java.math.BigInteger;
+import java.io.IOException;
+
+public class Main {	
+	public static void main(String[] args) throws IOException {
+		Solve solve = new Solve();
+		solve.run();
+	}
+}//class
+
+class Solve {
+	private BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	private BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+	int[] arr = new int[2];
+	int count = 0;
+	StringBuilder sb = new StringBuilder();
+	
+	public void run() throws IOException {
+		input();
+		calc();
+		printData();
+	}
+
+	private void input() throws IOException {
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		for (int i = 0; i < 2; i++) {
+			arr[i] = Integer.parseInt(st.nextToken());
+		}
+	}
+	
+	private void calc() {
+		for (int i = arr[0]; i <= arr[1]; i++) {
+			if (isPrime(i)) {
+				sb.append(i + "\n");
+			}
+		}
+	}
+	
+	private boolean isPrime(int i) {
+		if (i == 1) {
+			return false;
+		}
+		
+		for (int j = 2; j <= Math.sqrt(i); j++) {
+			if (i % j == 0) {
+				return false;
+			}
+		}
+		
+		return true;
+	}
+	
+	private void printData() throws IOException {
+		bw.write(sb.toString());
+		bw.flush();
+		bw.close();
+		br.close();
+	}
+}
+
+
+
+
+
+
+
+
+
+################################################################################################################
+예제27)알고리즘 기초 1 / 수학 1 / 골드바흐의 추측
+
+*이 문제의 핵심은 기계적으로 하나하나 완전탐색처럼 다 찾아가면서 푸는게 아니라 수학적 사고를 이용하여 풀어야한다.
+	그래야 속도가 빠르다. 기계적으로 해도 되긴한데 그럼 멍청이다.
+*정답3이 제일 중요하다. 제일 빠르고 format 함수는 속도가 수레기가 된다는 것을 인지하자..
+
+https://www.acmicpc.net/problem/6588
+################################################################################################################
+
+
+틀린 답1(젤처음에 주어지는 n만큼 계속 에라토네스의 체를 만들었던 답 메모리초과로 실패):
+
+
+import java.util.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
+import java.math.BigInteger;
+import java.io.IOException;
+
+public class Main {	
+	public static void main(String[] args) throws IOException {
+		Solve solve = new Solve();
+		solve.run();
+	}
+}//class
+
+class Solve {
+	private BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	private BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+	private int n;
+	private boolean[] sieve = new boolean[1000001];
+	private List<Integer> list = new ArrayList<>();
+	private int start = 0;
+	private int end = 0;
+	private StringBuilder sb = new StringBuilder();
+	
+	public void run() throws IOException {
+		while ((n = Integer.parseInt(br.readLine())) != 0) {
+			input();
+			calc();
+		}
+		
+		printData();
+	}
+
+	private void input() throws IOException {	
+		sieve = new boolean[n + 1];
+		sieve[0] = true;
+		sieve[1] = true;
+	}
+	
+	private void calc() {
+		operateSieve(); // 소수 판별(에라토네스의 체)
+		setList(); // 소수값 list에 오름차순으로 데이터 넣기
+		appendValue(); // 주어진 n에 대한 홀수인 두소수의 합을 찾아서 sb에 append하는 함수
+	}
+	
+	private void operateSieve() {
+		for (int i = 2; i * i <= n; i++) {
+			operateSieve(i);
+		}
+	}
+	
+	private void operateSieve(int i) {
+		for (int j = i * i; j <= n; j += i) {
+			sieve[j] = true;
+		}
+	}
+	
+	private void setList() {
+		for (int i = 3; i < n; i++) {
+			if (!sieve[i]) {
+				list.add(i);
+			};
+		}
+	}
+	
+	private void appendValue() {
+		setValue(); // start와 end 값을 세팅하는 함수
+		sb.append(String.format("%d = %d + %d\n", n, start, end));
+	}
+	
+	private void setValue() {
+		int startIndex = 0;
+		int endIndex = list.size() - 1;
+		
+		while (list.get(startIndex) + list.get(endIndex) != n) {
+			if (list.get(startIndex) + list.get(endIndex) > n) {
+				endIndex--;
+				continue;
+			}
+			
+			{ // start + end < n
+				startIndex++;
+			}
+		}		
+		
+		start = list.get(startIndex);
+		end = list.get(endIndex);
+	}
+	
+	private void printData() throws IOException {
+		bw.write(sb.toString());
+		bw.flush();
+		bw.close();
+		br.close();
+	}
+}
+
+
+
+
+
+
+
+
+
+
+틀린 답2(에라토네스의 체를 한번만 만들었어도 메모리초과로 실패한답):
+	
+
+
+import java.util.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
+import java.math.BigInteger;
+import java.io.IOException;
+
+public class Main {	
+	public static void main(String[] args) throws IOException {
+		Solve solve = new Solve();
+		solve.run();
+	}
+}//class
+
+class Solve {
+	private BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	private BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+	private int n;
+	private boolean[] sieve = new boolean[1000001];
+	private List<Integer> list = new ArrayList<>();
+	private int start = 0;
+	private int end = 0;
+	private StringBuilder sb = new StringBuilder();
+	
+	public void run() throws IOException {
+		operateSieve(); // 소수 판별(에라토네스의 체)
+
+		while ((n = Integer.parseInt(br.readLine())) != 0) {
+			calc();
+			list.clear();
+		}
+		
+		printData();
+	}
+
+	private void operateSieve() {
+		sieve[0] = true;
+		sieve[1] = true;
+		
+		for (int i = 2; i * i <= 1000000; i++) {
+			operateSieve(i);
+		}
+	}
+	
+	private void operateSieve(int i) {
+		for (int j = i * i; j <= 1000000; j += i) {
+			sieve[j] = true;
+		}
+	}
+	
+	private void calc() {
+		setList(); // 소수값 list에 오름차순으로 데이터 넣기
+		appendValue(); // 주어진 n에 대한 홀수인 두소수의 합을 찾아서 sb에 append하는 함수
+	}
+	
+	private void setList() {
+		for (int i = 3; i < n; i++) {
+			int s = i;
+			int e = n - 1;
+			if (!sieve[i]) {
+				
+				list.add(i);
+			};
+		}
+	}
+	
+	private void appendValue() {
+		setValue(); // start와 end 값을 세팅하는 함수
+		sb.append(String.format("%d = %d + %d\n", n, start, end));
+	}
+	
+	private void setValue() {
+		int startIndex = 0;
+		int endIndex = list.size() - 1;
+		
+		while (list.get(startIndex) + list.get(endIndex) != n) {
+			if (list.get(startIndex) + list.get(endIndex) > n) {
+				startIndex = 0;
+				endIndex--;
+				continue;
+			}
+			
+			{ // start + end < n
+				startIndex++;
+			}
+		}		
+		
+		start = list.get(startIndex);
+		end = list.get(endIndex);
+	}
+	
+	private void printData() throws IOException {
+		bw.write(sb.toString());
+		bw.flush();
+		bw.close();
+		br.close();
+	}
+}
+
+
+정답1(위 틀린답2에서 메모리초과 이유가 list에 매회 소수를 모두 받는 과정때문이라 생각했고 그부분을 개선한 코드):
+	
+
+import java.util.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
+import java.math.BigInteger;
+import java.io.IOException;
+
+public class Main {	
+	public static void main(String[] args) throws IOException {
+		Solve solve = new Solve();
+		solve.run();
+	}
+}//class
+
+class Solve {
+	private BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	private BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+	private int n;
+	private boolean[] sieve = new boolean[1000001];
+	private List<Integer> list = new ArrayList<>();
+	private int start = 0;
+	private int end = 0;
+	private StringBuilder sb = new StringBuilder();
+	
+	public void run() throws IOException {
+		operateSieve(); // 소수 판별(에라토네스의 체)
+
+		while ((n = Integer.parseInt(br.readLine())) != 0) {
+			calc();
+		}
+		
+		printData();
+	}
+
+	private void operateSieve() {
+		sieve[0] = true;
+		sieve[1] = true;
+		
+		for (int i = 2; i * i <= 1000000; i++) {
+			operateSieve(i);
+		}
+	}
+	
+	private void operateSieve(int i) {
+		for (int j = i * i; j <= 1000000; j += i) {
+			sieve[j] = true;
+		}
+	}
+	
+	private void calc() {
+		setValue(); // 주어진 n에 대한 홀수인 두소수의 합을 찾아서 start, end에 넣기
+		appendValue(); // 이번회차의 답을 sb에 append하는 함수
+	}
+	
+	private void setValue() {
+		int s = 3;		
+		int e = n - 1;
+		
+		while (sieve[e]) {
+			e--;
+		}
+
+		while (s + e != n) {
+			if (s + e > n) {
+				s = 3;
+				e--;
+				while (sieve[e]) {
+					e--;
+				}
+				continue;
+			}
+
+			{ // start + end < n
+				s++;
+				while (sieve[s]) {
+					s++;
+				}
+			}
+		}		
+		
+		start = s;
+		end = e;
+	}
+	
+	private void appendValue() {
+		sb.append(String.format("%d = %d + %d\n", n, start, end));
+	}
+	
+	private void printData() throws IOException {
+		bw.write(sb.toString());
+		bw.flush();
+		bw.close();
+		br.close();
+	}
+}
+
+
+
+정답2(백준님 정답을 내것으로 적용한 것. 지렸다그냥.. ):
+	-n = a + b(a,b == 소수, a < b) 일때 n -a = b 형태가 된다.
+		그러면 소수중 가장 적은 a값을 n에 뺐을 때 (a 값은 오름차순으로 더높은 소수의 값으로 변경한다)
+		나오는 수가 b인데 이때 b는 소수 또는 일반수가 나올수있다.
+		합성수가 아닌 소수라면 두 홀수인 소수의 합으로 해당 짝수가 이루어졌고 거기다가 a가 가장
+		적기때문에 당연히 b가 가장 크고 그러면 b-a가 가장 큰 값이 된다.
+
+import java.util.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
+import java.math.BigInteger;
+import java.io.IOException;
+
+public class Main {	
+	public static void main(String[] args) throws IOException {
+		Solve solve = new Solve();
+		solve.run();
+	}
+}//class
+
+class Solve {
+	private BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	private BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+	private int n;
+	private boolean[] sieve = new boolean[1000001];
+	private List<Integer> list = new ArrayList<>();
+	private int start = 0;
+	private int end = 0;
+	private StringBuilder sb = new StringBuilder();
+	
+	public void run() throws IOException {
+		operateSieve(); // 소수 판별(에라토네스의 체) 및 소수값 list에 오름차순으로 데이터 넣기
+		
+		while ((n = Integer.parseInt(br.readLine())) != 0) {
+			calc();
+		}
+		
+		printData();
+	}
+
+	private void operateSieve() {
+		sieve[0] = true;
+		sieve[1] = true;
+		
+		for (int i = 2; i * i <= 1000000; i++) {
+			if (i == 2) {
+				operateSieve(i);
+				continue;
+			}
+			
+			if (!sieve[i]) {
+				list.add(i);
+				operateSieve(i);	
+			}
+		}
+	}
+	
+	private void operateSieve(int i) {
+		for (int j = i * i; j <= 1000000; j += i) {
+			sieve[j] = true;
+		}
+	}
+	
+	private void calc() {
+		setValue(); // start와 end 값을 세팅하는 함수
+		appendValue(); // 주어진 n에 대한 홀수인 두소수의 합을 sb에 append하는 함수
+	}
+	
+	private void setValue() {	
+		for (int i = 0; i < list.size(); i++) {
+			if (!sieve[n - list.get(i)]) {				
+				start = list.get(i);
+				end = n - list.get(i);
+				break;
+			}
+		}
+	}
+	
+	private void appendValue() {
+		sb.append(String.format("%d = %d + %d\n", n, start, end));
+	}
+	
+	
+	private void printData() throws IOException {
+		bw.write(sb.toString());
+		bw.flush();
+		bw.close();
+		br.close();
+	}
+}
+
+
+
+
+
+정답3(은거기인의 정답을 내방식으로 적용한것. 백준님보다 빠르다.):
+	-해석결과 : 아까 내가 위에서(정답1) list를 안만들고 바로 만든 방식을 백준님답에 적용하면 이리나오네
+	-그리고 위의 답들은 바보같이 증명하는 것을 빼먹었다.
+
+import java.util.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
+import java.math.BigInteger;
+import java.io.IOException;
+
+public class Main {	
+	public static void main(String[] args) throws IOException {
+		Solve solve = new Solve();
+		solve.run();
+	}
+}//class
+
+class Solve {
+	private BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	private BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+	private int n;
+	private boolean[] sieve = new boolean[1000001];
+	private int start = 0;
+	private int end = 0;
+	private StringBuilder sb = new StringBuilder();
+	private boolean flag;
+	private String str;
+	
+	public void run() throws IOException {
+		operateSieve(); // 소수 판별(에라토네스의 체)
+		
+		while ((n = Integer.parseInt(br.readLine())) != 0) {
+			calc();
+		}
+		
+		printData();
+	}
+
+	private void operateSieve() {
+		sieve[0] = true;
+		sieve[1] = true;
+		
+		for (int i = 2; i * i <= 1000000; i++) {
+			if (!sieve[i]) {
+				operateSieve(i);	
+			}
+		}
+	}
+	
+	private void operateSieve(int i) {
+		for (int j = i * i; j <= 1000000; j += i) {
+			sieve[j] = true;
+		}
+	}
+	
+	private void calc() {
+		setValue(); // start와 end 값을 세팅하는 함수
+		appendValue(); // 주어진 n에 대한 홀수인 두소수의 합을 sb에 append하는 함수
+	}
+	
+	private void setValue() {	
+		flag = false;
+		for (int i = 3; i < n; i++) { // j <= n / 2 안한게 더 빠름
+			if (!sieve[i] && !sieve[n - i]) {
+				flag = true;
+				start = i;
+				end = n - i;
+//				str = n + " = " + i + " + " + (n - i);
+				// 여기서 바로 str 먹이는거보다 start, end만 넣고 나와서 appendValue()에서
+				// 먹이니까 더 빨라짐.. 무슨 차이인가 싶다. 전역변수만 두개 더 늘어나서 더 느릴줄 알았는데.
+				// 다시 돌려보니 돌릴때마다 시간이 다르다 ㅋㅋ 걍 똑같은 수준이라 생각하면될듯 
+				// 전역변수에 넣는건 내가보기에 이게 더 가독성이  좋아보여서 이렇게 넣음 
+				break;
+			}
+		}
+	}
+	
+	private void appendValue() {
+		if (!flag) { // 골드바흐의 추측이 틀린경우
+			sb.append("Goldbach's conjecture is wrong.\n");
+			return;
+		}
+		
+		{ // flag == true, 즉 골드바흐의 추측이 틀리지 않은 경우
+			str = n + " = " + start + " + " + end + "\n";
+			sb.append(str);
+//			sb.append(String.format("%d = %d + %d\n", n, start, end));
+			//이놈 format 돌리니 시간이 1196ms로 됨;; 안돌렸을때는 420ms.. format 함수 쓰레기인듯..
+			// 뭐에서 속도가 느려지는가 찾느라고 하루종일 걸렸네 젠장
+		}
+	}
+	
+	
+	private void printData() throws IOException {
+		bw.write(sb.toString());
+		bw.flush();
+		bw.close();
+		br.close();
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+################################################################################################################
+예제28)알고리즘 기초 1 / 수학 1 / 팩토리얼
+
+https://www.acmicpc.net/problem/10872
+################################################################################################################
+
+
+
+답:
+
+
+
+
+
+import java.util.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
+import java.math.BigInteger;
+import java.io.IOException;
+
+public class Main {	
+	public static void main(String[] args) throws IOException {
+		Solve solve = new Solve();
+		solve.run();
+	}
+}//class
+
+class Solve {
+	private BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	private BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+	private int N;
+
+	public void run() throws IOException {
+		input();
+		int result = calc(N);
+		System.out.println(result);
+	}
+
+	private void input() throws IOException {
+		N = Integer.parseInt(br.readLine());
+	}
+
+	private int calc(int N) {
+		if (N == 0) {
+			return 1;
+		}
+		if (N == 1) {
+			return 1;
+		}
+		return N * calc(N - 1);
+		//5 * calc(4)   120
+		//		4 * calc(3) 24
+		//			 3 * calc(2) 6
+		//					2 * calc(1) 2
+		//						1 
+	}
+
+	private void printData() throws IOException {
+	
+	}
+}
+
+
+
+
+
+
+
+
+################################################################################################################
+예제29)알고리즘 기초 1 / 수학 1 / 팩토리얼 0의 개수
+
+https://www.acmicpc.net/problem/1676
+################################################################################################################
+
+
+
+답(팩토리얼과 5의 규칙성으로 푼 코드):
+	-규칙성: 팩토리얼 인수를 5로 나눈 몫을 0이될때까지 몫들을 나눴을때 몫의 합은 5의 지수와 같다.
+		그리고 2의 지수가 5의 지수보다 많고 그래서 5의 지수 갯수만 신경쓰면 된다.
+
+
+
+
+import java.util.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
+import java.math.BigInteger;
+import java.io.IOException;
+
+public class Main {	
+	public static void main(String[] args) throws IOException {
+		Solve solve = new Solve();
+		solve.run();
+	}
+}//class
+
+class Solve {
+	private BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	private BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+	private int N;
+	private int count = 0;
+
+	public void run() throws IOException {
+		input();
+		calc();
+		System.out.println(count);
+	}
+
+	private void input() throws IOException {
+		N = Integer.parseInt(br.readLine());
+	}
+
+	private void calc() {
+		while (N != 0) { 
+			count += N / 5;
+			N /= 5;
+		}
+	}
+	
+	private void printData() throws IOException {
+	
+	}
+}
+
+
+
+
+
+
+

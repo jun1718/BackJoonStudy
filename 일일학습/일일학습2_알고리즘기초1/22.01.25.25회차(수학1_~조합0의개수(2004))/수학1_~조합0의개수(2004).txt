@@ -1,0 +1,226 @@
+21.01.25.25회차
+===============================================================================
+*알고리즘 기초 1 / 2
+===============================================================================
+
+
+
+
+
+################################################################################################################
+예제30)두 수의 곱에 대한 0의 개수 ( 내가 내게 된 문제 )
+
+*이다음 31번문제 잘못이해해서 푼 문제임
+* 잘못이해한 문제 내용 : 입력되는 두 수의 곱에 대한 0의 개수를 출력하시오
+	-위 내용에 대해 푼 답안임
+
+################################################################################################################
+
+
+
+답(팩토리얼과 5의 규칙성으로 푼 코드):
+	-규칙성: 팩토리얼 인수를 5로 나눈 몫을 0이될때까지 몫들을 나눴을때 몫의 합은 5의 지수와 같다.
+		그리고 2의 지수가 5의 지수보다 많고 그래서 5의 지수 갯수만 신경쓰면 된다.
+
+
+
+
+
+import java.util.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
+import java.math.BigInteger;
+import java.io.IOException;
+
+public class Main {	
+	public static void main(String[] args) throws IOException {
+		Solve solve = new Solve();
+		solve.run();
+	}
+}//class
+
+class Solve {
+	private BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	private BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+	int[] arr = new int[2];
+	Stack<Integer> twoStack = new Stack<>();
+	Stack<Integer> fiveStack = new Stack<>();
+	
+	public void run() throws IOException {
+		input();
+		int result = calc();
+		printData(result);
+	}
+	
+	private void input() throws IOException {
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		arr[0] = Integer.parseInt(st.nextToken());
+		arr[1] = Integer.parseInt(st.nextToken());
+	}
+	
+	private int calc() {
+		return getCount();
+	}
+	
+	private int getCount() {
+		primeFactorization(arr[0]);
+		primeFactorization(arr[1]);
+		
+		if (twoStack.size() >= fiveStack.size()) {
+			return fiveStack.size(); // 지수가 적은 녀석의 수만큼 끝자리에 0의 개수가 있다.
+		} 
+		
+		return twoStack.size();
+	}
+	
+	private void primeFactorization(int N) {
+		if (N == 1) {
+			return;
+		}
+		
+		if (N % 5 == 0) {
+			fiveStack.push(0);
+			N /= 5;
+		} else if (N % 2 == 0) {
+			twoStack.push(0);
+			N /= 2;
+		} else {
+			return;
+		}
+		
+		primeFactorization(N);
+	}
+	
+	private boolean isTwoCountBigger() {
+		
+		
+		return false;
+	}
+	
+	private void printData(int result) throws IOException {
+		bw.write(String.valueOf(result));
+		bw.flush();
+		bw.close();
+		br.close();
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+################################################################################################################
+예제31)알고리즘 기초 1 / 수학 1 / 조합 0의 개수 
+
+*이항계수에 관한 문제임
+*하나의 팩토리얼값에 한해서는 반드시 5의 지수가 더 작지만 팩토리얼값끼리의 나누기 곱하기 연산을 통한 뒤의 값은
+	반드시 5의 지수가 작진 않다. 즉 2의 지수가 더 작은 경우도 있다. 그래서 5의 지수와 2의 지수
+	를 둘다 구해서 작은 지수로 해야한다. 팩토리얼에선 항상 5의 지수가 작으니 5의 지수를 답으로 내면되지만
+	복합연산에선 그렇지 않다는 뜻이다. 일일히 두개다 구해서 누가더 낮은지를 파악해야한다.
+		ex) 5 1	 답 : 0 , 5의 지수로만 계산했을시 예상되는 오답 : 1
+			-2^0 * 5^1( 120 / 24)
+
+https://www.acmicpc.net/problem/2004
+################################################################################################################
+
+
+답:
+
+
+
+import java.util.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
+import java.math.BigInteger;
+import java.io.IOException;
+
+public class Main {	
+	public static void main(String[] args) throws IOException {
+		Solve solve = new Solve();
+		solve.run();
+	}
+}//class
+
+class Solve {
+	private BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	private BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+	private int n;
+	private int k;
+	Stack<Integer> twoStack = new Stack<>();
+	Stack<Integer> fiveStack = new Stack<>();
+	
+	public void run() throws IOException {
+		input();
+		calc();
+		printData();
+	}
+	
+	private void input() throws IOException {
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		n = Integer.parseInt(st.nextToken());
+		k = Integer.parseInt(st.nextToken());
+	}
+	
+	private void calc() {
+		int fiveCount = getFiveCount(n) - getFiveCount(n - k) - getFiveCount(k); // n!하였을때 5의 갯수, 즉 0의 갯수를 반환하는 함수
+		int twoCount = getTwoCount(n) - getTwoCount(n-k) - getTwoCount(k);
+		
+		int count = Math.min(fiveCount, twoCount);
+		System.out.println(count);
+	}
+	
+	private int getFiveCount(int n) {
+		int sum = 0;
+		while (n >= 5) {
+			sum += n / 5;
+			n /= 5;
+		}
+		return sum;
+	}
+	
+	private int getTwoCount(int n) {
+		int sum = 0;
+		
+		while (n >= 2) {
+			sum += n / 2;
+			n /= 2;
+		}
+		
+		return sum;
+	}
+	
+	
+	private void printData() throws IOException {
+//		bw.write(String.valueOf(result));
+		bw.flush();
+		bw.close();
+		br.close();
+	}
+}
